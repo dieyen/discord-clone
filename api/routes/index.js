@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const controller = require('../controllers/main.controller');
+const initDb = require('../controllers/knexfile');
+
 
 /* Routings for Users */
 router.post( '/user/', controller.postUser );
@@ -41,8 +43,12 @@ router.get( '/user/:userID/server/:serverID/channel/:channelID', controller.getC
   router.post( '/user/:userID/server/:serverID/channel/:channelID/role/', controller.assignRoleToChannel );
   router.get( '/user/:userID/server/:serverID/channel/:channelID/roles', controller.listRolesInChannel );
 /* GET home page. */
+
+// initDb.initialize();
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { 
+    title: 'Express',
+  });
 });
 
 module.exports = router;

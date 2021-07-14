@@ -1,4 +1,9 @@
+const { default: knex } = require('knex');
 const shortid = require('shortid');
+const db = require('./knexfile');
+// const knex = require('./initialize-database');
+
+// const dbController = require('./initialize-database');
 
 /* 
     USER: userID, email, displayName, picture, password 
@@ -15,7 +20,20 @@ let userToServer = [];
 let channelToServer = [];
 
 const controller = {
+    // addUserTables: dbController.addUsersTable,
+
     postUser: function(req, res){
+        db.postUser(req.body)
+        .then(
+            (val) => {
+
+            }
+        )
+        .catch(
+            (error) => {
+
+            }
+        )
         var userFound = undefined;
         new Promise( (resolve,reject) => {
             users.forEach( (val, key) => {
@@ -75,23 +93,42 @@ const controller = {
     },
 
     listUsers: function(req, res){
-        new Promise( (resolve, reject) => {
-            resolve( users );
-        })
-        .then( 
-            (val) => {
+        knex.from('users')
+            .select('displayName', 'picture')
+            .then( (val) => {
                 res.status(200).json( { data: val } );
             })
-        .catch( (error) => {
-            console.log( error.stack );
-            res.status(404).json({
-                error: { 
-                    code: 404,
-                    message: error.stack,
-                    status: "ERROR_CAUGHT"
+            .catch( 
+                (error) => {
+                    console.log( error.stack );
+                    res.status(404).json({
+                        error: {
+                            code: 404,
+                            message: error.stack,
+                            status: "ERROR_CAUGHT"
+                        }
+                    })
                 }
-            })
-        })
+            )
+        // new Promise( (resolve, reject) => {
+        //     resolve( users );
+        // })
+        // .then( 
+        //     (val) => {
+        //         res.status(200).json( { data: val } );
+        //     })
+        // .catch( 
+        //     (error) => {
+        //         console.log( error.stack );
+        //         res.status(404).json({
+        //             error: { 
+        //                 code: 404,
+        //                 message: error.stack,
+        //                 status: "ERROR_CAUGHT"
+        //             }
+        //         })
+        //     }
+        // )
     },
 
     getUser: function(req, res){
