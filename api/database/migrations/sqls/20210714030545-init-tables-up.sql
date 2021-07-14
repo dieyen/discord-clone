@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS mydb.servers(
 CREATE TABLE IF NOT EXISTS mydb.`users-servers`(
     `userID` INT NOT NULL,
     `serverID` INT NOT NULL,
-    FOREIGN KEY (`userID`) REFERENCES users (`userID`),
-    FOREIGN KEY (`serverID`) REFERENCES servers (`serverID`)  
+    FOREIGN KEY (`userID`) REFERENCES users (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`serverID`) REFERENCES servers (`serverID`) ON DELETE CASCADE ON UPDATE CASCADE 
 );
 
 CREATE TABLE IF NOT EXISTS mydb.roles(
@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS mydb.roles(
 CREATE TABLE IF NOT EXISTS mydb.`servers-roles`(
     `serverID` INT NOT NULL,
     `roleID` INT NOT NULL,
-    FOREIGN KEY (`serverID`) REFERENCES servers (`serverID`),
-    FOREIGN KEY (`roleID`) REFERENCES roles (`roleID`)
+    FOREIGN KEY (`serverID`) REFERENCES servers (`serverID`) ON DELETE CASCADE,
+    FOREIGN KEY (`roleID`) REFERENCES roles (`roleID`) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS mydb.channels(
@@ -47,22 +47,22 @@ CREATE TABLE IF NOT EXISTS mydb.channels(
 CREATE TABLE IF NOT EXISTS mydb.`servers-channels`(
     `serverID` INT NOT NULL,
     `channelID` INT NOT NULL,
-    FOREIGN KEY (`serverID`) REFERENCES servers (`serverID`),
-    FOREIGN KEY (`channelID`) REFERENCES channels (`channelID`)
+    FOREIGN KEY (`serverID`) REFERENCES servers (`serverID`) ON DELETE CASCADE,
+    FOREIGN KEY (`channelID`) REFERENCES channels (`channelID`) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS mydb.`channels-roles`(
     `channelID` INT NOT NULL,
     `roleID` INT NOT NULL,
-    FOREIGN KEY (`channelID`) REFERENCES channels (`channelID`),
-    FOREIGN KEY (`roleID`) REFERENCES roles (`roleID`)
+    FOREIGN KEY (`channelID`) REFERENCES channels (`channelID`) ON DELETE CASCADE,
+    FOREIGN KEY (`roleID`) REFERENCES roles (`roleID`) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS mydb.`users-roles`(
     `userID` INT NOT NULL,
     `roleID` INT NOT NULL,
-    FOREIGN KEY (`userID`) REFERENCES users (`userID`),
-    FOREIGN KEY (`roleID`) REFERENCES roles (`roleID`)
+    FOREIGN KEY (`userID`) REFERENCES users (`userID`) ON DELETE CASCADE,
+    FOREIGN KEY (`roleID`) REFERENCES roles (`roleID`) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS mydb.messages(
@@ -71,16 +71,27 @@ CREATE TABLE IF NOT EXISTS mydb.messages(
     `date` DATE,
     `time` TIME,
     `userID` INT NOT NULL,
-    FOREIGN KEY (`userID`) REFERENCES users (`userID`),
+    FOREIGN KEY (`userID`) REFERENCES users (`userID`) ON DELETE CASCADE,
     PRIMARY KEY (`messageID`)
 );
 
 CREATE TABLE IF NOT EXISTS mydb.`channels-messages`(
     `channelID` INT NOT NULL,
     `messageID` INT NOT NULL,
-    FOREIGN KEY (`channelID`) REFERENCES channels (`channelID`),
-    FOREIGN KEY (`messageID`) REFERENCES messages (`messageID`)
+    FOREIGN KEY (`channelID`) REFERENCES channels (`channelID`) ON DELETE CASCADE,
+    FOREIGN KEY (`messageID`) REFERENCES messages (`messageID`) ON DELETE CASCADE
 );
+
+CREATE PROCEDURE `LoginUser`(
+    IN email VARCHAR(100),
+    IN pass VARCHAR(30)
+)
+BEGIN
+    SELECT * 
+    FROM users
+    WHERE users.email = email
+    AND users.password = pass;
+END;
 
 CREATE PROCEDURE `AddUser`(
     IN email VARCHAR(100),
@@ -107,5 +118,57 @@ CREATE PROCEDURE `GetUser`(
 BEGIN
     SELECT * 
     FROM users
-    WHERE user = userID;
+    WHERE userID = userID;
+END;
+
+CREATE PROCEDURE `AddServer`(
+    IN `userID` INT,
+    IN `name` VARCHAR(100),
+    IN `picture` VARCHAR(255)
+)
+BEGIN
+    DECLARE `serverID` INT;
+    DECLARE `channelID` INT;
+    DECLARE `roleID` INT;
+
+    INSERT INTO `servers` (`name`, `picture`) 
+    VALUES(
+        `name`, `picture`
+    );
+    SELECT `servers`.`serverID` INTO `serverID` FROM `servers` WHERE `servers`.`serverID` = @@Identity;
+
+    INSERT INTO `users-servers` (`userID`, `serverID`)
+    VALUES(
+        `userID`, `serverID`
+    );
+
+    INSERT INTO `roles`(`name`, `isAdmin`)
+    VALUES(
+        "Admin", 1
+    );
+
+    SELECT `roles`.`roleID` INTO `roleID` FROM `roles` WHERE `roles`.`roleID` = @@Identity;
+
+    INSERT INTO `servers-roles` (`serverID`, `roleID`)
+    VALUES(
+        `serverID`, `roleID`
+    );
+
+    INSERT INTO `users-roles` (`userID`, `roleID`)
+    VALUES(
+        `userID`, `roleID`
+    );
+
+    INSERT INTO `channels`(`name`, `description`)
+    VALUES(
+        "General", ""
+    );
+
+    SELECT `channels`.`channelID` INTO `channelID` FROM `channels` WHERE `channels`.`channelID` = @@Identity;
+
+    INSERT INTO `servers-channels` (`serverID`, `channelID`)
+    VALUES(
+        `serverID`, `channelID`
+    );
+
 END;

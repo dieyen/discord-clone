@@ -11,117 +11,171 @@ const db = require('./knexfile');
     SERVER: serverID, name, picture
     CHANNEL: channelID, name, description, categoryID
 */
-let users = [];
-let roles = [];
-let servers = [];
-let channels = [];
-let userToRoles = [];
-let userToServer = [];
-let channelToServer = [];
+let loggedInUser = undefined;
 
 const controller = {
-    // addUserTables: dbController.addUsersTable,
 
-    postUser: function(req, res){
-        db.postUser(req.body)
+    login: function( req, res ){
+        db.loginUser( req.body )
         .then(
             (val) => {
+                if ( val[0][0].length != 0 ){
+                    loggedInUser = val[0][0][0];
 
+                    res.status(200).json({
+                        data: {
+                            userID: loggedInUser.userID,
+                            email: loggedInUser.email,
+                            displayName: loggedInUser.displayName,
+                            picture: loggedInUser.picture
+                        }
+                    });
+                }
+                else{
+                    res.status(404).json({
+                        error: {
+                            code: 404,
+                            message: "User not found.",
+                            status: "USER_NOT_FOUND"
+                        }
+                    });
+                }
             }
         )
         .catch(
             (error) => {
-
-            }
-        )
-        var userFound = undefined;
-        new Promise( (resolve,reject) => {
-            users.forEach( (val, key) => {
-                if ( userFound ){
-                    return;
-                }
-
-                if ( val.email == req.body.email ){
-                    userFound = val;
-                }
-            });
-
-            if ( !userFound ){    
-                var entry = {
-                    "userID": users.length + 1,
-                    "email": req.body.email,
-                    "displayName": req.body.displayName,
-                    "picture": req.body.picture,
-                    "password": req.body.password,
-                    "servers": []
-                };
-                users.push( entry );
-                resolve( entry );
-            }
-            reject( userFound );
-            
-        })
-        .then( 
-            (val) => {                                            
-                res.status(200).json( { data: val } );
-            }, 
-            
-            (reason) => {
-                res.status(409).json( {
+                res.status(404).json({
                     error: {
-                        code: 409,
-                        message: "User with email " + reason.email + " already exists." ,
-                        status: "USER_ALREADY_EXISTS"
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
                     }
-                });
+                })
             }
         )
-        .catch( 
-            (error) => {          
-                console.log( error.stack );                             
-                res.status(404).json( 
-                    {
-                        error: {
-                            code: 404,
-                            message: error.stack,
-                            status: "ERROR_CAUGHT"
-                        } 
+    },
+
+    postUser: function(req, res){
+        db.postUser( req.body )
+        .then(
+            (val) => {
+                console.log( val );
+                res.status(200).json({ 
+                    data: {
+                        userID: req.body.userID,
+                        email: req.body.email,
+                        displayName: req.body.displayName,
+                        picture: req.body.picture
+                    } 
+                })
+            }
+        )
+        .catch(
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
                     }
-                );
+                })
             }
         )
     },
 
     listUsers: function(req, res){
-        knex.from('users')
-            .select('displayName', 'picture')
-            .then( (val) => {
-                res.status(200).json( { data: val } );
-            })
-            .catch( 
-                (error) => {
-                    console.log( error.stack );
-                    res.status(404).json({
-                        error: {
-                            code: 404,
-                            message: error.stack,
-                            status: "ERROR_CAUGHT"
-                        }
-                    })
-                }
-            )
-        // new Promise( (resolve, reject) => {
-        //     resolve( users );
-        // })
-        // .then( 
+        db.listUsers()
+        .then(
+            (val) => {
+                usersList = val[0][0];
+                usersList.forEach( (val, key) => {
+                    delete val['password'];
+                })
+                res.status(200).json( { data: usersList } );
+            }
+        )
+        .catch(
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
+                    }
+                })
+            }
+        )
+    },
+
+    getUser: function(req, res){
+        new Promise( (resolve, reject) => {
+            if ( loggedInUser ){
+                resolve( loggedInUser );
+            }
+            else{
+                reject()
+            }
+        })
+        .then(
+            (val) => {
+                res.status(200).json({
+                    data: {
+                        email: val.email,
+                        displayName: val.displayName,
+                        picture: val.picture
+                    }
+                });
+            },
+
+            (reason) => {
+                res.status(404).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .catch(
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
+                    }
+                })
+            }
+        )
+        
+        // db.getUser(loggedInUser.userID)
+        // .then(
         //     (val) => {
-        //         res.status(200).json( { data: val } );
-        //     })
-        // .catch( 
+        //         if ( val[0][0].length != 0 ){
+        //             res.status(200).json({
+        //                 data: {
+        //                     email: val[0][0][0].email,
+        //                     displayName: val[0][0][0].displayName,
+        //                     picture: val[0][0][0].picture
+        //                 }
+        //             });
+        //         }
+        //         else{
+        //             res.status(404).json({
+        //                 error: {
+        //                     code: 404,
+        //                     message: "User not found.",
+        //                     status: "USER_NOT_FOUND"
+        //                 }
+        //             });
+        //         }
+        //     }
+        // )
+        // .catch(
         //     (error) => {
-        //         console.log( error.stack );
         //         res.status(404).json({
-        //             error: { 
+        //             error: {
         //                 code: 404,
         //                 message: error.stack,
         //                 status: "ERROR_CAUGHT"
@@ -129,53 +183,6 @@ const controller = {
         //         })
         //     }
         // )
-    },
-
-    getUser: function(req, res){
-        new Promise( (resolve, reject) => {
-            let foundUser;
-
-            users.forEach( (val, key) => {
-                if ( val.userID == req.params.userID ){
-                    foundUser = val;
-                }
-            });
-
-            if ( foundUser ){
-                resolve( foundUser );
-            }
-            else{
-                reject( req.params.userID );
-            }
-
-        })
-        .then( 
-            (val) => {
-                res.status(200).json( { data: val } );
-            }, 
-            
-            (reason) => {
-                res.status(404).json({
-                    error: {
-                        code: 400,
-                        message: "Cannot find user with ID " + reason,
-                        status: "USER_NOT_FOUND" 
-                    }
-                })
-            }
-        )
-        .catch( 
-            (error) => {
-                console.log( error.stack );
-                res.status(404).json({
-                    error: {
-                        code: 404,
-                        message: error.stack,
-                        status: "ERROR_CATCH"
-                    }
-                })
-            }
-        )
     },
 
     searchUser: function(req, res){
@@ -207,87 +214,40 @@ const controller = {
     },
 
     postServer: function(req, res){
-        let user = users[ req.params.userID - 1 ];
-
-        if ( !user ){
-            res.status(400).json({
-                error: {
-                    code: 400,
-                    message: "User does not have a permission to create server. Check if the user exists.",
-                    status: "USER_NOT_FOUND"
-                }
-            });
-        }
-
-        new Promise( (resolve,reject) => {
-            var serverFound = false;
-
-            servers.forEach( (val, key) => {
-                if ( serverFound ){
-                    return;
-                }
-
-                if ( val.name == req.body.name ){
-                    serverFound = true;
-                }
-            });
-
-            if ( !serverFound ){
-                var adminRole = {
-                    "roleID": roles.length + 1,
-                    "name": "Admin",
-                    "isAdmin": true
-                }
-                var newChannel = {
-                    "channelID": channels.length + 1,
-                    "name": "General",
-                    "description": "",
-                    "categoryID": 0,
-                    "roles": [],
-                    "messages": []
-                }
-
-                roles.push( adminRole );
-                channels.push( newChannel );
-
-                var entry = {
-                    "serverID": servers.length + 1,
-                    "name": req.body.name,
-                    "picture": req.body.picture,
-                    "categories": [],
-                    "channels": [ newChannel ],
-                    "roles": [ adminRole ],
-                    "users-to-roles": [
-                        {
-                            "roleID": roles.length,
-                            "userID": user.userID
-                        }
-                    ],
-                    "channels-to-roles": []
-                };
-                // console.log( entry );
-                user.servers.push( entry );
-                servers.push( entry );
-                resolve( entry );
+        new Promise( (resolve, reject) => {
+            if ( loggedInUser ){
+                resolve( loggedInUser );
             }
-            reject( req.body.name )
+            else{
+                reject()
+            }
         })
-        .then( 
+        .then(
             (val) => {
-                res.status(200).json( { data: val } );
-            }, 
-            
-            (reason) => {
-                res.status(409).json( {
-                    error: {
-                        code: 409,
-                        message: "Server " + reason + " already exists.",
-                        status: "SERVER_ALREADY_EXISTS"
+                db.addServer( val.userID, req.body )
+                .then(
+                    (val) => {
+                        res.status(200).json({
+                            data: {
+                                name: req.body.name,
+                                picture: req.body.picture
+                            }
+                        });
                     }
-                } );
+                )
+            },
+
+            (reason) => {
+                res.status(404).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
             }
         )
-        .catch( 
+        .catch(
             (error) => {
                 res.status(404).json({
                     error: {
@@ -298,6 +258,97 @@ const controller = {
                 })
             }
         )
+        // let user = users[ req.params.userID - 1 ];
+
+        // if ( !user ){
+        //     res.status(400).json({
+        //         error: {
+        //             code: 400,
+        //             message: "User does not have a permission to create server. Check if the user exists.",
+        //             status: "USER_NOT_FOUND"
+        //         }
+        //     });
+        // }
+
+        // new Promise( (resolve,reject) => {
+        //     var serverFound = false;
+
+        //     servers.forEach( (val, key) => {
+        //         if ( serverFound ){
+        //             return;
+        //         }
+
+        //         if ( val.name == req.body.name ){
+        //             serverFound = true;
+        //         }
+        //     });
+
+        //     if ( !serverFound ){
+        //         var adminRole = {
+        //             "roleID": roles.length + 1,
+        //             "name": "Admin",
+        //             "isAdmin": true
+        //         }
+        //         var newChannel = {
+        //             "channelID": channels.length + 1,
+        //             "name": "General",
+        //             "description": "",
+        //             "categoryID": 0,
+        //             "roles": [],
+        //             "messages": []
+        //         }
+
+        //         roles.push( adminRole );
+        //         channels.push( newChannel );
+
+        //         var entry = {
+        //             "serverID": servers.length + 1,
+        //             "name": req.body.name,
+        //             "picture": req.body.picture,
+        //             "categories": [],
+        //             "channels": [ newChannel ],
+        //             "roles": [ adminRole ],
+        //             "users-to-roles": [
+        //                 {
+        //                     "roleID": roles.length,
+        //                     "userID": user.userID
+        //                 }
+        //             ],
+        //             "channels-to-roles": []
+        //         };
+        //         // console.log( entry );
+        //         user.servers.push( entry );
+        //         servers.push( entry );
+        //         resolve( entry );
+        //     }
+        //     reject( req.body.name )
+        // })
+        // .then( 
+        //     (val) => {
+        //         res.status(200).json( { data: val } );
+        //     }, 
+            
+        //     (reason) => {
+        //         res.status(409).json( {
+        //             error: {
+        //                 code: 409,
+        //                 message: "Server " + reason + " already exists.",
+        //                 status: "SERVER_ALREADY_EXISTS"
+        //             }
+        //         } );
+        //     }
+        // )
+        // .catch( 
+        //     (error) => {
+        //         res.status(404).json({
+        //             error: {
+        //                 code: 404,
+        //                 message: error.stack,
+        //                 status: "ERROR_CAUGHT"
+        //             }
+        //         })
+        //     }
+        // )
     },
 
     listServersInUser: function(req, res){

@@ -5,23 +5,24 @@ const setup = {
         console.log( knex );
     },
 
-    postUser: function(user){
-        return knex.raw( 'CALL AddUser(?, ?, ?, ?)', [user.displayName, user.email, user.picture, user.password] )
-            
+    loginUser: function(user){
+        return knex.raw( 'CALL LoginUser(?, ?);', [ user.email, user.password ] );
     },
 
-    initialize: function(){
-        console.log( "Creating user tables...");
-        knex.raw('CREATE TABLE users (`userID` INT NOT NULL AUTO_INCREMENT, `email` VARCHAR(45) NULL, PRIMARY KEY (`userID`));')
-        .then(
-            (val) => {
-                console.log( val );
-            }
-        ).catch(
-            (error) => {
-                console.log( error );
-            }
-        )
+    postUser: function(user){
+        return knex.raw( 'CALL AddUser(?, ?, ?, ?)', [ user.email, user.displayName, user.picture, user.password ] );
+    },
+
+    listUsers: function(){
+        return knex.raw( 'CALL ListUsers();' );
+    },
+
+    getUser: function(userID){
+        return knex.raw( 'CALL GetUser(?)', [ userID ] );
+    },
+
+    addServer: function(userID, server){
+        return knex.raw( 'CALL AddServer(?, ?, ?)', [ userID, server.name, server.picture ] );
     }
 }
 

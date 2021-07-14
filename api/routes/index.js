@@ -3,17 +3,18 @@ var router = express.Router();
 const controller = require('../controllers/main.controller');
 const initDb = require('../controllers/knexfile');
 
-
+/* Login */
+router.post( '/login/', controller.login );
 /* Routings for Users */
 router.post( '/user/', controller.postUser );
 router.get( '/users/', controller.listUsers );
-router.get( '/user/:userID', controller.getUser );
+router.get( '/user/', controller.getUser );
 router.get( '/users/search', controller.searchUser );
 
 /* Routings for Servers */
-router.post( '/user/:userID/server/', controller.postServer );
-router.get( '/user/:userID/servers/', controller.listServersInUser );
-router.get( '/user/:userID/server/:serverID', controller.getServerInUser );
+router.post( '/user/server/', controller.postServer );
+router.get( '/user/servers/', controller.listServersInUser );
+router.get( '/user/server/:serverID', controller.getServerInUser );
 
 /* Routings for Roles */
 router.post( '/user/:userID/server/:serverID/role/', controller.postRole );
