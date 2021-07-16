@@ -14,14 +14,33 @@ const db = require('./knexfile');
 let loggedInUser = undefined;
 
 const controller = {
-
     login: function( req, res ){
-        db.loginUser( req.body )
+
+        if ( req.body.email === "" ){
+            res.status(400).json({
+                error: {
+                    code: 400,
+                    message: "Email address is empty.",
+                    status: "EMAIL_ADDRESS_EMPTY"
+                }
+            });
+        }
+        
+        if ( req.body.password === "" ){
+            res.status(400).json({
+                error: {
+                    code: 400,
+                    message: "Password is empty.",
+                    status: "PASSWORD_EMPTY"
+                }
+            });
+        }
+
+        db.loginUser( req.body.email, req.body.password )
         .then(
             (val) => {
-                if ( val[0][0].length != 0 ){
+                if ( val ){
                     loggedInUser = val[0][0][0];
-
                     res.status(200).json({
                         data: {
                             userID: loggedInUser.userID,
@@ -35,7 +54,7 @@ const controller = {
                     res.status(404).json({
                         error: {
                             code: 404,
-                            message: "User not found.",
+                            message: "Invalid user credentials or user not found.",
                             status: "USER_NOT_FOUND"
                         }
                     });
@@ -56,16 +75,45 @@ const controller = {
     },
 
     postUser: function(req, res){
-        db.postUser( req.body )
+        let pendingUser = req.body;
+
+        if ( pendingUser.email === "" ){
+            res.status(400).json({
+                error: {
+                    code: 400,
+                    message: "Email address is empty.",
+                    status: "EMAIL_ADDRESS_EMPTY"
+                }
+            });
+        }
+
+        if ( pendingUser.displayName === "" ){
+            res.status(400).json({
+                error: {
+                    code: 400,
+                    message: "Display name is empty.",
+                    status: "DISPLAY_NAME_EMPTY"
+                }
+            });
+        }
+
+        if ( pendingUser.password === "" ){
+            res.status(400).json({
+                error: {
+                    code: 400,
+                    message: "Password is empty.",
+                    status: "PASSWORD_EMPTY"
+                }
+            });
+        }
+        db.postUser( pendingUser.email, pendingUser.displayName, pendingUser.picture, pendingUser.password )
         .then(
             (val) => {
-                console.log( val );
                 res.status(200).json({ 
                     data: {
-                        userID: req.body.userID,
-                        email: req.body.email,
-                        displayName: req.body.displayName,
-                        picture: req.body.picture
+                        email: pendingUser.email,
+                        displayName: pendingUser.displayName,
+                        picture: pendingUser.picture
                     } 
                 })
             }
@@ -87,11 +135,7 @@ const controller = {
         db.listUsers()
         .then(
             (val) => {
-                usersList = val[0][0];
-                usersList.forEach( (val, key) => {
-                    delete val['password'];
-                })
-                res.status(200).json( { data: usersList } );
+                res.status(200).json( { data: val } );
             }
         )
         .catch(
@@ -219,18 +263,31 @@ const controller = {
                 resolve( loggedInUser );
             }
             else{
-                reject()
+                reject();
             }
         })
         .then(
             (val) => {
-                db.addServer( val.userID, req.body )
+                var pendingServer = req.body;
+
+                if ( pendingServer.name === "" ){
+                    res.status(400).json({
+                        error: {
+                            code: 400,
+                            message: "Server name is empty.",
+                            status: "SERVER_NAME_EMPTY"
+                        }
+                    });
+                    return;
+                }
+
+                db.addServer( val.userID, pendingServer.name, pendingServer.picture )
                 .then(
                     (val) => {
                         res.status(200).json({
                             data: {
-                                name: req.body.name,
-                                picture: req.body.picture
+                                name: pendingServer.name,
+                                picture: pendingServer.picture
                             }
                         });
                     }
@@ -258,110 +315,36 @@ const controller = {
                 })
             }
         )
-        // let user = users[ req.params.userID - 1 ];
-
-        // if ( !user ){
-        //     res.status(400).json({
-        //         error: {
-        //             code: 400,
-        //             message: "User does not have a permission to create server. Check if the user exists.",
-        //             status: "USER_NOT_FOUND"
-        //         }
-        //     });
-        // }
-
-        // new Promise( (resolve,reject) => {
-        //     var serverFound = false;
-
-        //     servers.forEach( (val, key) => {
-        //         if ( serverFound ){
-        //             return;
-        //         }
-
-        //         if ( val.name == req.body.name ){
-        //             serverFound = true;
-        //         }
-        //     });
-
-        //     if ( !serverFound ){
-        //         var adminRole = {
-        //             "roleID": roles.length + 1,
-        //             "name": "Admin",
-        //             "isAdmin": true
-        //         }
-        //         var newChannel = {
-        //             "channelID": channels.length + 1,
-        //             "name": "General",
-        //             "description": "",
-        //             "categoryID": 0,
-        //             "roles": [],
-        //             "messages": []
-        //         }
-
-        //         roles.push( adminRole );
-        //         channels.push( newChannel );
-
-        //         var entry = {
-        //             "serverID": servers.length + 1,
-        //             "name": req.body.name,
-        //             "picture": req.body.picture,
-        //             "categories": [],
-        //             "channels": [ newChannel ],
-        //             "roles": [ adminRole ],
-        //             "users-to-roles": [
-        //                 {
-        //                     "roleID": roles.length,
-        //                     "userID": user.userID
-        //                 }
-        //             ],
-        //             "channels-to-roles": []
-        //         };
-        //         // console.log( entry );
-        //         user.servers.push( entry );
-        //         servers.push( entry );
-        //         resolve( entry );
-        //     }
-        //     reject( req.body.name )
-        // })
-        // .then( 
-        //     (val) => {
-        //         res.status(200).json( { data: val } );
-        //     }, 
-            
-        //     (reason) => {
-        //         res.status(409).json( {
-        //             error: {
-        //                 code: 409,
-        //                 message: "Server " + reason + " already exists.",
-        //                 status: "SERVER_ALREADY_EXISTS"
-        //             }
-        //         } );
-        //     }
-        // )
-        // .catch( 
-        //     (error) => {
-        //         res.status(404).json({
-        //             error: {
-        //                 code: 404,
-        //                 message: error.stack,
-        //                 status: "ERROR_CAUGHT"
-        //             }
-        //         })
-        //     }
-        // )
     },
 
     listServersInUser: function(req, res){
-        let user = users[ req.params.userID - 1 ];
-
         new Promise( (resolve, reject) => {
-            resolve( user.servers );
+            if ( loggedInUser ){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
         })
-        .then( 
+        .then(
             (val) => {
-                res.status(200).json( { data: val } );
-        })
-        .catch( 
+                let serverList = await db.listServersOfUser( val.userID )
+                console.log( "Controller value: ", serverList );
+                res.status(200).json( { data: serverList } );
+    
+            },
+
+            (reason) => {
+                res.status(404).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .catch(
             (error) => {
                 res.status(404).json({
                     error: {
@@ -370,51 +353,96 @@ const controller = {
                         status: "ERROR_CAUGHT"
                     }
                 })
-        })
+            }
+        )
     },
 
     getServerInUser: function(req, res){
-        let user = users[ req.params.userID - 1];
-        let server = servers[ req.params.serverID - 1 ];
+        /* 
+            server = {
+                name: "Name",
+                picture: "path",
+                channels: [
 
-        if ( !server ){
-            res.status(400).json({
-                error: {
-                    code: 400,
-                    message: "The server you are looking for does not exist.",
-                    status: "SERVER_NOT_FOUND"
-                }
-            })
-        }
+                ],
+                roles: [
+
+                ],
+                users: [
+
+                ]
+            }
+        */
+        // serverInfo = db.getServerInfo()
+        // channelsList = db.getChannelsInServer()
+        // rolesList = db.getRolesInServer()
+        // usersList = db.getUsersInServer()
+        
+        // let user = users[ req.params.userID - 1];
+        // let server = servers[ req.params.serverID - 1 ];
+
+        // if ( !server ){
+        //     res.status(400).json({
+        //         error: {
+        //             code: 400,
+        //             message: "The server you are looking for does not exist.",
+        //             status: "SERVER_NOT_FOUND"
+        //         }
+        //     })
+        // }
 
         new Promise( (resolve, reject) => {
-            user.servers.forEach( (val, key) => {
-                if ( server ){
-                    return;
-                }
-                if ( val.serverID == req.params.serverID ){
-                    server = val;
-                }
-            });
-
-            if ( server ){
-                resolve( server );
+            if ( loggedInUser ){
+                resolve( loggedInUser );
             }
-            reject( req.params.serverID );
-
+            else{
+                reject();
+            }
         })
         .then( 
             (val) => {
-                res.status(200).json( { data: val } );
+                var servID = req.params.serverID
+                var serverInfo = db.getServerInfo( servID );
+
+                if ( serverInfo ){
+                    return serverInfo;
+                }
+                else{
+                    res.status(400).json({
+                        error: {
+                            code: 400,
+                            message: "Server not found.",
+                            status: "SERVER_NOT_FOUND"
+                        }
+                    });
+                    return;
+                }
             },
             (reason) => {
-                res.status(403).json({
+                res.status(404).json({
                     error: {
                         code: 403,
-                        message: "You are not allowed to view this server. Receive invitation first from the server owner.",
-                        status: "SERVER_PERMISSION_DENIED"
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
                     }
-                })
+                });
+            }
+        )
+        .then(
+            (val) => {
+                var channelsList = db.getServerChannels( val.serverID );
+                var rolesList = db.getServerRoles( val.serverID );
+                var usersList = db.getServerUsers( val.serverID );
+
+                res.status(200).json({
+                    data: {
+                        name: val.name,
+                        picture: val.picture,
+                        channels: channelsList,
+                        users: usersList,
+                        roles: rolesList
+                    }
+                });
             }
         )
         .catch( 
