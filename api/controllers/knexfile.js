@@ -48,16 +48,12 @@ const setup = {
     },
 
     listServersOfUser: async function( userID ){
-        let serversList = undefined;
         knex.raw( 'CALL ListServersOfUser(?)', [ userID ] )
         .then(
             (val) => {
-                serversList = val[0][0];
+                return val[0][0];
             }
         );
-        
-        console.log( "Knex value: ", serversList );
-        return serversList;
     },
 
     getServerInfo: function(userID, serverID){
@@ -80,7 +76,7 @@ const setup = {
         .then(
             (val) => {
                 if ( val[0][0].length != 0 ){
-                    return val[0][0][0];
+                    return val[0][0];
                 }
                 else{
                     return;
