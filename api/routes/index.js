@@ -12,14 +12,14 @@ router.get( '/user/', controller.getUser );
 router.get( '/users/search', controller.searchUser );
 
 /* Routings for Servers */
-router.post( '/user/server/', controller.postServer );
-router.get( '/user/servers/', controller.listServersInUser );
-router.get( '/user/server/:serverID', controller.getServerInUser );
+router.post( '/user/server/', controller.postServer );                // /server/
+router.get( '/user/servers/', controller.listServersInUser );         // /servers/
+router.get( '/user/server/:serverID', controller.getServerInUser );   // /server/:serverID/
 
 /* Routings for Roles */
-router.post( '/user/:userID/server/:serverID/role/', controller.postRole );
-router.get( '/user/:userID/server/:serverID/roles/', controller.listRolesInServer );
-router.get( '/user/:userID/server/:serverID/role/:roleID', controller.getRoleInServer );
+router.post( '/user/:userID/server/:serverID/role/', controller.postRole );                 // /role/
+router.get( '/user/:userID/server/:serverID/roles/', controller.listRolesInServer );        // /roles/
+router.get( '/user/:userID/server/:serverID/role/:roleID', controller.getRoleInServer );    // /roles/:roleID/?serverID=
 
 /* Routings for Channels */
 router.post( '/user/:userID/server/:serverID/channel/', controller.createChannel );

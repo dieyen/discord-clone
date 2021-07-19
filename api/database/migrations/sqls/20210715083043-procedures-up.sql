@@ -4,11 +4,11 @@ CREATE PROCEDURE `LoginUser`(
     IN pass VARCHAR(30)
 )
 BEGIN
-    SELECT `users`.`userID`, `users`.`email,`, `users`.`displayName`, `users`.`picture`
+    SELECT `users`.`userID`, `users`.`email`, `users`.`displayName`, `users`.`picture`
     FROM `users`
     WHERE `users`.`email` = `email`
     AND `users`.`password` = `pass`;
-END
+END;
 
 CREATE PROCEDURE `AddUser`(
     IN email VARCHAR(100),
@@ -101,7 +101,7 @@ BEGIN
     INNER JOIN `users`
         ON `users`.`userID` = `users-servers`.`userID`
     WHERE `users`.`userID` = `userID`;
-END
+END;
 
 CREATE PROCEDURE `GetServerInfo`(
     IN `userID` INT,
@@ -122,11 +122,11 @@ CREATE PROCEDURE `GetServerChannels`(
     IN `serverID` INT
 )
 BEGIN
-    SELECT `channels`.`channelID`, `channel`.`name`, `channel`.`description`
+    SELECT `channels`.`channelID`, `channels`.`name`, `channels`.`description`
     FROM `channels`
     INNER JOIN `servers-channels`
-        ON `servers`.`serverID` = `servers-channels`.`serverID`
-    WHERE `servers`.`serverID` = `serverID`;    
+        ON `channels`.`channelID` = `servers-channels`.`channelID`
+    WHERE `servers-channels`.`serverID` = `serverID`;  
 END;
 
 CREATE PROCEDURE `GetServerRoles`(
@@ -136,17 +136,17 @@ BEGIN
     SELECT `roles`.`roleID`, `roles`.`name`, `roles`.`isAdmin`
     FROM `roles`
     INNER JOIN `servers-roles`
-        ON `servers`.`serverID` = `servers-roles`.`serverID`
-    WHERE `servers`.`serverID` = `serverID`;    
+        ON `roles`.`roleID` = `servers-roles`.`roleID`
+    WHERE `servers-roles`.`serverID` = `serverID`;    
 END;
 
 CREATE PROCEDURE `GetServerUsers`(
     IN `serverID` INT
 )
 BEGIN
-    SELECT `users`.`userID`, `users`.`email`, `users`.`diplayName`, `users`.`picture`
+    SELECT `users`.`userID`, `users`.`email`, `users`.`displayName`, `users`.`picture`
     FROM `users`
     INNER JOIN `users-servers`
-        ON `servers`.`serverID` = `users-servers`.`serverID`
-    WHERE `servers`.`serverID` = `serverID`;    
+        ON `users`.`userID` = `users-servers`.`userID`
+    WHERE `users-servers`.`serverID` = `serverID`;    
 END;

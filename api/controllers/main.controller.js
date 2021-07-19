@@ -328,10 +328,12 @@ const controller = {
         })
         .then(
             (val) => {
-                let serverList = await db.listServersOfUser( val.userID )
-                console.log( "Controller value: ", serverList );
-                res.status(200).json( { data: serverList } );
-    
+                db.listServersOfUser( val.userID )
+                .then(
+                    (val) => {
+                        res.status(200).json( { data: val } );
+                    }
+                )
             },
 
             (reason) => {
@@ -402,10 +404,10 @@ const controller = {
         .then( 
             (val) => {
                 var servID = req.params.serverID
-                var serverInfo = db.getServerInfo( servID );
+                var serverInfo = db.getServerInfo( val.userID, servID );
 
                 if ( serverInfo ){
-                    return serverInfo;
+                    return Promise.resolve( serverInfo );
                 }
                 else{
                     res.status(400).json({
@@ -430,19 +432,37 @@ const controller = {
         )
         .then(
             (val) => {
-                var channelsList = db.getServerChannels( val.serverID );
-                var rolesList = db.getServerRoles( val.serverID );
-                var usersList = db.getServerUsers( val.serverID );
+                var currentServer = val;
 
-                res.status(200).json({
-                    data: {
-                        name: val.name,
-                        picture: val.picture,
-                        channels: channelsList,
-                        users: usersList,
-                        roles: rolesList
+                const serverPromise = db.getServerChannels( val.serverID )
+                .then(
+                    (val) => { return val; }
+                );
+
+                const rolePromise = db.getServerRoles( val.serverID )
+                .then(
+                    (val) => { return val; }
+                );
+
+                const userPromise = db.getServerUsers( val.serverID )
+                .then(
+                    (val) => { return val; }
+                );
+
+                Promise.all( [ serverPromise, rolePromise, userPromise ] )
+                .then(
+                    (val) => {
+                        res.status(200).json({
+                            data: {
+                                name: currentServer.name,
+                                picture: currentServer.picture,
+                                channels: val[0],
+                                users: val[1],
+                                roles: val[2]
+                            }
+                        });
                     }
-                });
+                )
             }
         )
         .catch( 

@@ -47,21 +47,23 @@ const setup = {
         return knex.raw( 'CALL AddServer(?, ?, ?)', [ userID, name, picture ] );
     },
 
-    listServersOfUser: async function( userID ){
-        knex.raw( 'CALL ListServersOfUser(?)', [ userID ] )
+    listServersOfUser: function( userID ){
+        return knex.raw( 'CALL ListServersOfUser(?)', [ userID ] )
         .then(
             (val) => {
-                return val[0][0];
+                var returnValue = val[0][0];
+                return Promise.resolve( returnValue );
             }
         );
     },
 
     getServerInfo: function(userID, serverID){
-        knex.raw( 'CALL GetServerInfo(?, ?);', [ userID, serverID ] )
+        return knex.raw( 'CALL GetServerInfo(?, ?);', [ userID, serverID ] )
         .then(
             (val) => {
                 if ( val[0][0].length != 0 ){
-                    return val[0][0][0];
+                    var serverInfo = val[0][0][0];
+                    return Promise.resolve( serverInfo );
                 }
                 else{
                     return;
@@ -72,43 +74,31 @@ const setup = {
     },
 
     getServerChannels: function(serverID){
-        knex.raw( 'CALL GetServerChannels(?);', [ serverID ] )
+        return knex.raw( 'CALL GetServerChannels(?);', [ serverID ] )
         .then(
             (val) => {
-                if ( val[0][0].length != 0 ){
-                    return val[0][0];
-                }
-                else{
-                    return;
-                }
+                var channelsList = val[0][0];
+                return Promise.resolve( channelsList );
             }
         );
     },
 
     getServerRoles: function(serverID){
-        knex.raw( 'CALL GetServerRoles(?);', [ serverID ] )
+        return knex.raw( 'CALL GetServerRoles(?);', [ serverID ] )
         .then(
             (val) => {
-                if ( val[0][0].length != 0 ){
-                    return val[0][0][0];
-                }
-                else{
-                    return;
-                }
+                var rolesList = val[0][0];
+                return Promise.resolve( rolesList );
             }
         );
     },
 
     getServerUsers: function(serverID){
-        knex.raw( 'CALL GetServerUsers(?);', [ serverID ] )
+        return knex.raw( 'CALL GetServerUsers(?);', [ serverID ] )
         .then(
             (val) => {
-                if ( val[0][0].length != 0 ){
-                    return val[0][0][0];
-                }
-                else{
-                    return;
-                }
+                var usersList = val[0][0];
+                return Promise.resolve( usersList );
             }
         );
     }
