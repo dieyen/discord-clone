@@ -150,3 +150,34 @@ BEGIN
         ON `users`.`userID` = `users-servers`.`userID`
     WHERE `users-servers`.`serverID` = `serverID`;    
 END;
+
+CREATE PROCEDURE `UpdateRole`(
+    IN `roleID` INT,
+    IN `isAdmin` BOOLEAN
+)
+BEGIN
+    UPDATE `roles`
+        SET `roles`.`isAdmin` = `isAdmin`
+        WHERE `roles`.`roleID` = `roleID`;
+END;
+
+CREATE PROCEDURE `AddRoleInServer`(
+    IN `serverID` INT,
+    IN `name` VARCHAR(255),
+    IN `isAdmin` BOOLEAN
+)
+BEGIN
+    DECLARE `roleID` INT;
+    
+    INSERT INTO `roles`(`name`, `isAdmin`)
+    VALUES(
+        `name`, `isAdmin`
+    );
+
+    SELECT `roles`.`roleID` INTO `roleID` FROM `roles` WHERE `roles`.`roleID` = @@Identity;
+
+    INSERT INTO `servers-roles` (`serverID`, `roleID`)
+    VALUES(
+        `serverID`, `roleID`
+    );
+END;

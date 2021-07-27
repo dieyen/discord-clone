@@ -360,39 +360,6 @@ const controller = {
     },
 
     getServerInUser: function(req, res){
-        /* 
-            server = {
-                name: "Name",
-                picture: "path",
-                channels: [
-
-                ],
-                roles: [
-
-                ],
-                users: [
-
-                ]
-            }
-        */
-        // serverInfo = db.getServerInfo()
-        // channelsList = db.getChannelsInServer()
-        // rolesList = db.getRolesInServer()
-        // usersList = db.getUsersInServer()
-        
-        // let user = users[ req.params.userID - 1];
-        // let server = servers[ req.params.serverID - 1 ];
-
-        // if ( !server ){
-        //     res.status(400).json({
-        //         error: {
-        //             code: 400,
-        //             message: "The server you are looking for does not exist.",
-        //             status: "SERVER_NOT_FOUND"
-        //         }
-        //     })
-        // }
-
         new Promise( (resolve, reject) => {
             if ( loggedInUser ){
                 resolve( loggedInUser );
@@ -478,46 +445,76 @@ const controller = {
     },
 
     postRole: function(req, res){
-        let roleFound = false;
-        let server = servers[ req.params.serverID - 1 ];
 
-        new Promise( (resolve,reject) => {
+        new Promise ( (resolve, reject) => {
+            if ( loggedInUser ){
+                console.log( "Logged in!" );
+                resolve( loggedInUser )
+            }
+            else{
+                reject();
+            }
+        })
+        .then(
+            (val) => {
+                var pendingRole = req.body;
+                var servID = req.params.serverID;
 
-            server.roles.forEach( (val, key) => {
-                if ( roleFound ){
+                if ( pendingRole.name === "" || servID === "" ){
+                    res.status(400).json({
+                        error: {
+                            code: 400,
+                            message: "Role name is empty.",
+                            status: "ROLE_NAME_EMPTY"
+                        }
+                    });
                     return;
                 }
-                if ( val.name == req.body.name ){
-                    roleFound = val;
-                }
-            });
+                var serverInfo = db.getServerInfo( val.userID, servID );
 
-            if ( !roleFound ){
-                var entry = {
-                    "roleID": roles.length + 1,
-                    "name": req.body.name,
-                    "isAdmin": req.body.isAdmin
-                };
-                console.log( entry );
-                server.roles.push( entry );
-                roles.push( entry );
-                resolve( entry );
-            }
-            reject( roleFound );
-            
-        })
-        .then( 
-            (val) => {
-                res.status(200).json( { data: val } );
+                if ( serverInfo ){
+                    console.log( "Server info retrieved!" );
+                    return Promise.resolve( serverInfo );
+                }
+                else{
+                    res.status(400).json({
+                        error: {
+                            code: 400,
+                            message: "Server not found.",
+                            status: "SERVER_NOT_FOUND"
+                        }
+                    });
+                    return;
+                }
+
+
             },
             (reason) => {
-                res.status(403).json({
+                res.status(404).json({
                     error: {
                         code: 403,
-                        message: "Role " + reason.name + " already exists in the server.",
-                        status: "ROLE_ALREADY_EXISTS"
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
                     }
-                })
+                });
+            }
+        )
+        .then(
+            (val) => {
+                var currentServer = val;
+
+                db.addRole( currentServer.serverID, req.body.name, req.body.isAdmin )
+                .then(
+                    (val) => {
+                        res.status(200).json({
+                            data: {
+                                server: currentServer.name,
+                                role: req.body.name,
+                                isAdmin: req.body.isAdmin
+                            }
+                        })
+                    }
+                );
             }
         )
         .catch( 
@@ -534,14 +531,56 @@ const controller = {
     },
 
     listRolesInServer: function(req, res){
-        let server = servers[ req.params.serverID - 1 ];
-
         new Promise( (resolve, reject) => {
-            resolve( server.roles );
+            if ( loggedInUser ){
+                resolve( loggedInUser )
+            }
+            else{
+                reject();
+            }
         })
         .then( 
             (val) => {
-                res.status(200).json( { data: val } );
+                var servID = req.params.serverID;
+
+                var serverInfo = db.getServerInfo( val.userID, servID );
+
+                if ( serverInfo ){
+                    console.log( "Server info retrieved!" );
+                    return Promise.resolve( serverInfo );
+                }
+                else{
+                    res.status(400).json({
+                        error: {
+                            code: 400,
+                            message: "Server not found.",
+                            status: "SERVER_NOT_FOUND"
+                        }
+                    });
+                    return;
+                }
+            },
+
+            (reason) => {
+                res.status(404).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .then(
+            (val) => {
+                db.getServerRoles( val.serverID )
+                    .then(
+                        (val) => {
+                            res.status(200).json({
+                                data: val
+                            })
+                        }
+                    )
             }
         )
         .catch( 

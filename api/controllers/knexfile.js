@@ -101,6 +101,23 @@ const setup = {
                 return Promise.resolve( usersList );
             }
         );
+    },
+
+    addRole: function(serverID, role, isAdmin){
+        return knex.raw( 'CALL GetServerRoles(?)', [ serverID ] )
+        .then(
+            (val) => {
+                var query = val[0][0]
+
+                for ( var i = 0; i < query.length; i++ ){
+                    if ( query[i].name == role ){
+                        return knex.raw( 'CALL UpdateRole(?, ?)', [ query[i].roleID, isAdmin ])
+                    }
+                }
+
+                return knex.raw( 'CALL AddRoleToServer(?, ?, ?)', [ serverID, role, isAdmin ] )
+            }
+        )
     }
 }
 

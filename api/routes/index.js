@@ -17,9 +17,9 @@ router.get( '/user/servers/', controller.listServersInUser );         // /server
 router.get( '/user/server/:serverID', controller.getServerInUser );   // /server/:serverID/
 
 /* Routings for Roles */
-router.post( '/user/:userID/server/:serverID/role/', controller.postRole );                 // /role/
-router.get( '/user/:userID/server/:serverID/roles/', controller.listRolesInServer );        // /roles/
-router.get( '/user/:userID/server/:serverID/role/:roleID', controller.getRoleInServer );    // /roles/:roleID/?serverID=
+router.post( '/user/server/:serverID/role/', controller.postRole );                 // /role/
+router.get( '/user/server/:serverID/roles/', controller.listRolesInServer );        // /roles/
+router.get( '/user/server/:serverID/role/:roleID', controller.getRoleInServer );    // /roles/:roleID/?serverID=
 
 /* Routings for Channels */
 router.post( '/user/:userID/server/:serverID/channel/', controller.createChannel );
