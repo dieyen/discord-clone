@@ -402,19 +402,8 @@ const controller = {
                 var currentServer = val;
 
                 const serverPromise = db.getServerChannels( val.serverID )
-                .then(
-                    (val) => { return val; }
-                );
-
                 const rolePromise = db.getServerRoles( val.serverID )
-                .then(
-                    (val) => { return val; }
-                );
-
                 const userPromise = db.getServerUsers( val.serverID )
-                .then(
-                    (val) => { return val; }
-                );
 
                 Promise.all( [ serverPromise, rolePromise, userPromise ] )
                 .then(

@@ -1,0 +1,996 @@
+{
+	"info": {
+		"_postman_id": "98b02306-003e-4191-8da8-411d193f5072",
+		"name": "Discord Mini-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User Requests",
+			"item": [
+				{
+					"name": "GET Request",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "userName",
+								"value": "revel",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3000/user/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								""
+							],
+							"query": [
+								{
+									"key": "userName",
+									"value": "1234",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL Request",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "userName",
+								"value": "revel",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3000/users/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Anna",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"anna.union@gmail.com\",\r\n    \"displayName\": \"Anna Union\",\r\n    \"picture\": \"path/to/directory\",\r\n    \"password\": \"password\" \r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Bob",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"bob.trawleney@gmail.com\",\r\n    \"displayName\": \"Bob Trawleney\",\r\n    \"picture\": \"path/to/directory\",\r\n    \"password\": \"password\" \r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Anna",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"anna.union@gmail.com\",\r\n    \"password\": \"password\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Bob",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"bob.trawleney@gmail.com\",\r\n    \"password\": \"password\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Server Requests",
+			"item": [
+				{
+					"name": "Specific Server",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "userName",
+								"value": "revel",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3000/user/server/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"server",
+								"1"
+							],
+							"query": [
+								{
+									"key": "userName",
+									"value": "1234",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Servers of User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "userName",
+								"value": "revel",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3000/user/servers/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"servers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Crown Falls",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Crown Falls\",\r\n    \"picture\": \"path/to/directory\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/server/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"server",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create The Passage",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Cape Trawleney\",\r\n    \"picture\": \"path/to/directory\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/server/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"server",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Role Requests",
+			"item": [
+				{
+					"name": "GET ALL Request",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "userName",
+								"value": "revel",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3000/user/server/1/roles",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"server",
+								"1",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Request",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "userName",
+								"value": "revel",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3000/user/server/1/role",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"server",
+								"1",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Request Player",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"player\",\r\n    \"isAdmin\": false\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/server/1/role/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"server",
+								"1",
+								"role",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Request Exclusive",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"exclusive\",\r\n    \"isAdmin\": false\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/1/server/1/role/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"1",
+								"server",
+								"1",
+								"role",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User-Role Requests",
+			"item": [
+				{
+					"name": "Assign User To Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userID\": 2,\r\n    \"roleID\": 2\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/1/server/1/assign-user-to-role",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"1",
+								"server",
+								"1",
+								"assign-user-to-role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users To Roles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/users-to-roles/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users-to-roles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User to Roles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user-to-roles/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user-to-roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role to Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/role-to-users/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"role-to-users",
+								"2"
+							],
+							"query": [
+								{
+									"key": "roleID",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User-Server Requests",
+			"item": [
+				{
+					"name": "Assign User To Server",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userID\": 2\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/1/server/1/invite",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"1",
+								"server",
+								"1",
+								"invite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign User To Server as Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userID\": 2,\r\n    \"roleID\": 1\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/assign-user-to-role",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"assign-user-to-role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users in Server",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/server/1/users/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"server",
+								"1",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User in Server",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user-to-roles/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user-to-roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Servers of User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/role-to-users/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"role-to-users",
+								"2"
+							],
+							"query": [
+								{
+									"key": "roleID",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Channel-Server Requests",
+			"item": [
+				{
+					"name": "Assign Channel To Server 1",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Help\",\r\n    \"description\": \"General stuff and discussion\",\r\n    \"categoryID\": 0\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/1/server/1/channel",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"1",
+								"server",
+								"1",
+								"channel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Channel To Server 2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Exclusive\",\r\n    \"description\": \"Exclusive members only\",\r\n    \"categoryID\": 0\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/1/server/1/channel",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"1",
+								"server",
+								"1",
+								"channel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Channels in Server Admin",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user/1/server/1/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"1",
+								"server",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Channels in Server Role",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user/2/server/1/channels/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"2",
+								"server",
+								"1",
+								"channels",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users in Channels",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user-to-roles/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user-to-roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Servers of User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/role-to-users/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"role-to-users",
+								"2"
+							],
+							"query": [
+								{
+									"key": "roleID",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Channel In Server",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/server/1/channel/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"server",
+								"1",
+								"channel",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Role-Channel Requests",
+			"item": [
+				{
+					"name": "Assign Role to Channel 1",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"player\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/1/server/1/channel/2/role",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"1",
+								"server",
+								"1",
+								"channel",
+								"2",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Role to Channel 2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"exclusive\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:3000/user/1/server/1/channel/3/role",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"1",
+								"server",
+								"1",
+								"channel",
+								"3",
+								"role"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
