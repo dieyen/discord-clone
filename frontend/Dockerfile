@@ -11,12 +11,12 @@ COPY discord-miniapp/package*.json ./
  
 # install dependencies of the app
 RUN npm install
- 
+
 # copy the source code to the Docker image
-COPY . .
+COPY ./discord-miniapp .
  
 # expose the port where the app will listen to
-EXPOSE 3000 49153
+EXPOSE 4200 49153
 
 # start the server
 CMD ["npm", "start"]

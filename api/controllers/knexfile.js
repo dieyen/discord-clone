@@ -31,7 +31,7 @@ const setup = {
     },
 
     listUsers: function(){
-        var usersList = knex.raw( 'CALL ListUsers();' )
+        return knex.raw( 'CALL ListUsers();' )
         .then(
             (val) => {
                 return val[0][0];

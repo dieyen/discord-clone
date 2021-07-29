@@ -32,8 +32,9 @@ services:
             - 4200:4200
             - 49153:49153
         volumes:
-            - ./frontend/discord-miniapp:/app/
+            - ./frontend/discord-miniapp/src:/app/src
+            - ./frontend/discord-miniapp/start.sh:/app/start.sh
             - /app/src/assets
         depends_on:
             - mini-app
-        command: "node_modules/.bin/ng serve --host 0.0.0.0  --disable-host-check"
+        command: "bash start.sh"

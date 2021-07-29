@@ -1,25 +1,26 @@
 var express = require('express');
 var router = express.Router();
+const cors = require('cors');
 const controller = require('../controllers/main.controller');
 const initDb = require('../controllers/knexfile');
 
 /* Login */
 router.post( '/login/', controller.login );
 /* Routings for Users */
-router.post( '/user/', controller.postUser );
+router.post( '/users/', controller.postUser );
 router.get( '/users/', controller.listUsers );
 router.get( '/user/', controller.getUser );
 router.get( '/users/search', controller.searchUser );
 
 /* Routings for Servers */
-router.post( '/user/server/', controller.postServer );                // /server/
+router.post( '/user/servers/', controller.postServer );                // /server/
 router.get( '/user/servers/', controller.listServersInUser );         // /servers/
-router.get( '/user/server/:serverID', controller.getServerInUser );   // /server/:serverID/
+router.get( '/user/servers/:serverID', controller.getServerInUser );   // /server/:serverID/
 
 /* Routings for Roles */
-router.post( '/user/server/:serverID/role/', controller.postRole );                 // /role/
-router.get( '/user/server/:serverID/roles/', controller.listRolesInServer );        // /roles/
-router.get( '/user/server/:serverID/role/:roleID', controller.getRoleInServer );    // /roles/:roleID/?serverID=
+router.post( '/user/servers/:serverID/roles/', controller.postRole );                 // /role/
+router.get( '/user/servers/:serverID/roles/', controller.listRolesInServer );        // /roles/
+router.get( '/user/servers/:serverID/role/:roleID', controller.getRoleInServer );    // /roles/:roleID/?serverID=
 
 /* Routings for Channels */
 router.post( '/user/:userID/server/:serverID/channel/', controller.createChannel );
