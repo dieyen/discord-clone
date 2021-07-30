@@ -1,7 +1,4 @@
-const { default: knex } = require('knex');
-const shortid = require('shortid');
 const db = require('./knexfile');
-// const knex = require('./initialize-database');
 
 // const dbController = require('./initialize-database');
 
@@ -172,7 +169,7 @@ const controller = {
             },
 
             (reason) => {
-                res.status(404).json({
+                res.status(403).json({
                     error: {
                         code: 403,
                         message: "You are not logged in. Please login to continue.",
@@ -551,7 +548,7 @@ const controller = {
             },
 
             (reason) => {
-                res.status(404).json({
+                res.status(403).json({
                     error: {
                         code: 403,
                         message: "You are not logged in. Please login to continue.",
@@ -805,64 +802,34 @@ const controller = {
     },
 
     listChannelsInServer: function(req, res){
-        let user = users[ req.params.userID - 1 ];
-        let serverList = user.servers;
-        let server = undefined;
-        var availableChannels = [];
-
+        
         new Promise( (resolve, reject) => {
-            serverList.forEach( (val, key) => {
-                if ( server ){
-                    return;
-                }
-                if ( val.serverID == req.params.serverID ){
-                    server = val;
-                }
-            });
-            
-            availableChannels = server.channels;
-            let userRole = [];
-
-            server["users-to-roles"].forEach( (val, key) => {
-                if ( val.userID == user.userID ){
-                    userRole.push( val.roleID );
-                }
-            })
-
-            console.log( "User roles: ", userRole );
-
-            userRole.forEach( (role, key) => {
-                server["channels-to-roles"].forEach( (val, key) => {
-                    if ( roles[ role - 1 ].isAdmin ){
-                        return;
+            if ( loggedInUser ){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
+        })
+        .then(
+            (val) => {
+                db.getServerChannels( req.params.serverID )
+                .then(
+                    (val) => {
+                        res.status(200).json({
+                            data: val
+                        })
                     }
-                    if ( role != val.roleID ){
-                        let channelToRemove = undefined;
-                        availableChannels.forEach( (channel, key) => {
-                            console.log( "Channel: ", channel );
-                            console.log( "Evaluating channel: ", channel.name)
-                            if ( channelToRemove ){
-                                return;
-                            }
-                            if ( channel.channelID == val.channelID ){
-                                console.log( "Channel to remove found: ", channel)
-                                channelToRemove = channel;
-                            }
-                        });
-
-                        var index = availableChannels.indexOf( channelToRemove );
-                        console.log( "Channel to remove: ", channelToRemove );
-                        console.log( "Index to remove: ", index )
-                        availableChannels.splice( index, 1 );
+                )
+            },
+            () => {
+                res.status(403).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
                     }
                 });
-            });
-
-            resolve( availableChannels );
-        })
-        .then( 
-            (val) => {
-                res.status(200).json( { data: val } );
             }
         )
         .catch( 

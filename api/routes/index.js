@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const cors = require('cors');
 const controller = require('../controllers/main.controller');
-const initDb = require('../controllers/knexfile');
+// const userController;
+// const serverController;
+// const channelController;
 
 /* Login */
 router.post( '/login/', controller.login );
@@ -13,9 +14,9 @@ router.get( '/user/', controller.getUser );
 router.get( '/users/search', controller.searchUser );
 
 /* Routings for Servers */
-router.post( '/user/servers/', controller.postServer );                // /server/
-router.get( '/user/servers/', controller.listServersInUser );         // /servers/
-router.get( '/user/servers/:serverID', controller.getServerInUser );   // /server/:serverID/
+router.post( '/servers/', controller.postServer );                // /server/
+router.get( '/servers/', controller.listServersInUser );         // /servers/
+router.get( '/servers/:serverID', controller.getServerInUser );   // /server/:serverID/
 
 /* Routings for Roles */
 router.post( '/user/servers/:serverID/roles/', controller.postRole );                 // /role/
