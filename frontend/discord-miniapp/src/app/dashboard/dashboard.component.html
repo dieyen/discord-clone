@@ -1,0 +1,11 @@
+<div class="container">
+    <div>
+        <app-server-list (displayAddServerComponent)="toggleAddServer($event)" (serverEmitter)="setServer($event)" ></app-server-list>
+    </div>
+    <div *ngIf="channels.length > 0">
+        <app-channel-list [channels]="channels"></app-channel-list>
+    </div>
+    <div *ngIf="isAddServer">
+        <app-add-server></app-add-server>
+    </div>
+</div>

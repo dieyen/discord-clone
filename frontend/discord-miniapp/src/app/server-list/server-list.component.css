@@ -1,0 +1,32 @@
+.side-navbar {
+    width: 180px;
+    height: 100%;
+    position: fixed;
+    margin-left: -300px;
+    background-color: rgba(10, 09, 01, 1.0);
+    transition: 0.5s;
+  }
+  li:active,
+  li:focus,
+  li:hover {
+    background-color: #2a1e5c;
+  }
+  .active-nav {
+    margin-left: 0;
+  }
+ .nav-link{
+   text-align: center;
+ }
+  p.server-entry{
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  h3.profile{
+    text-align: middle;
+    vertical-align: middle;
+  }
+
+  .add-server{
+    font-size: 150%;
+  }

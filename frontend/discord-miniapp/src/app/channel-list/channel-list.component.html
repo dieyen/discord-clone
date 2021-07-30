@@ -1,0 +1,9 @@
+<div class="channels-list active-nav justify-content-between start-0">
+    <ul class="nav flex-wrap flex-column text-white w-100">
+        <h3 class="text-white">Channels</h3>
+        
+        <li *ngFor="let channel of channels">
+            <p class="channel-entry"><span>{{ channel['name'] }}</span></p>
+        </li>
+    </ul>
+</div>

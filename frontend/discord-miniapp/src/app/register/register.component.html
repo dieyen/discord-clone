@@ -1,0 +1,35 @@
+<div class="container-sm">
+    <h2>Harmonia</h2>
+    <h3>Create an account</h3>
+    <div class="d-flex justify-content-center form">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" formControlName="email" required>
+                <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert">
+                    <div *ngIf="email.errors?.required">Email is required.</div>
+                    <div *ngIf="email.errors?.email">Email is not valid.</div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="displayName" class="form-label">Display Name</label>
+                <input type="text" class="form-control" id="displayName" formControlName="displayName">
+            </div>
+            <div class="mb-3">
+                <label for="picture" class="form-label">Picture</label>
+                <input type="file" class="form-control" id="picture" formControlName="picture">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" formControlName="password" required>
+                <div *ngIf="password.invalid && (password.dirty || password.touched)" class="alert">
+                    <div *ngIf="password.errors?.required">Password is required.</div>
+                </div>
+            </div>
+            <div class="d grid d-md-flex justify-content-center">
+                <button class="btn btn-primary" type="submit" [disabled]="!userForm.valid">Submit</button>
+            </div>
+        </form>
+    </div>
+    
+</div>

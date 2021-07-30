@@ -1,0 +1,14 @@
+<script src="./server-list.component.js"></script>
+
+<div class="side-navbar active-nav start-0" id="sidebar" *ngIf="user">
+    <ul class="nav flex-column text-white w-100">
+        <a href="#" class="nav-link h3 text-white">{{ user.displayName }}</a>
+        
+        <li *ngFor="let server of serverList;let i=index" (click)="selectServer(i+1)">
+            <p class="server-entry"><span class="align-middle"> {{ server['name'] }} </span></p>
+        </li>
+        <li (click)="addServer()">
+            <p class="server-entry"><span class="align-middle add-server">+</span></p>
+        </li>
+    </ul>
+</div>
