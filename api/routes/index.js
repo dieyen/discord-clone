@@ -24,9 +24,9 @@ router.get( '/user/servers/:serverID/roles/', controller.listRolesInServer );   
 router.get( '/user/servers/:serverID/role/:roleID', controller.getRoleInServer );    // /roles/:roleID/?serverID=
 
 /* Routings for Channels */
-router.post( '/user/:userID/server/:serverID/channel/', controller.createChannel );
-router.get( '/user/:userID/server/:serverID/channels/', controller.listChannelsInServer );
-router.get( '/user/:userID/server/:serverID/channel/:channelID', controller.getChannelInServer );
+router.post( '/servers/:serverID/channels/', controller.postChannel );
+router.get( '/servers/:serverID/channels/', controller.listChannelsInServer );
+router.get( '/servers/:serverID/channels/:channelID', controller.getChannelInServer );
 
 /* Routings for table connections */
   /* Users and Roles connection */

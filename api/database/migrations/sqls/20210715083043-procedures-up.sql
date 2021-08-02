@@ -181,3 +181,20 @@ BEGIN
         `serverID`, `roleID`
     );
 END;
+
+CREATE PROCEDURE `AddChannel` (
+	IN `p_serverID` INT,
+    IN `p_name` VARCHAR(100),
+    IN `p_description` VARCHAR(255)
+)
+BEGIN
+	DECLARE `q_channelID` INT;
+    
+	INSERT INTO `channels` (`name`, `description`) VALUES
+    ( `p_name`, `p_description`);
+    
+    SELECT `channels`.`channelID` INTO `q_channelID` FROM `channels` WHERE `channels`.`channelID` = @@Identity;
+    
+    INSERT INTO `servers-channels` (`serverID`, `channelID`) VALUES
+    ( `p_serverID`, `q_channelID`);
+END;

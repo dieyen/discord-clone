@@ -23,7 +23,6 @@ export class DashboardComponent implements OnInit {
   }
 
   setServer( payload: string ){
-    // console.log( payload );
     var serverData = JSON.parse( payload );
 
     this.channels = serverData.channels;

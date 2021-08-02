@@ -6,24 +6,12 @@ const setup = {
     },
 
     loginUser: function(email, password){
-        return knex.raw( 'CALL LoginUser(?, ?);', [ email, password ] );
-        // knex.raw( 'CALL LoginUser(?, ?);', [ email, password ] )
-        // .then(
-        //     (val) => {
-        //         if ( val[0][0].length != 0 ){
-        //             console.log( "Returning value: ", val[0][0][0] );
-        //             return val[0][0][0];
-        //         }
-        //         else{
-        //             return;
-        //         }
-        //     }
-        // )
-        // .catch(
-        //     (error) => {
-        //         return error;
-        //     }
-        // )
+        return knex.raw( 'CALL LoginUser(?, ?);', [ email, password ] )
+        .then(
+            (val) => {
+                return val[0][0][0];
+            }
+        );
     },
 
     postUser: function(email, displayName, picture, password){
@@ -116,6 +104,30 @@ const setup = {
                 }
 
                 return knex.raw( 'CALL AddRoleToServer(?, ?, ?)', [ serverID, role, isAdmin ] )
+            }
+        )
+    },
+
+    addChannel: function(serverID, name, desc){
+        return knex.raw( 'CALL GetServerChannels(?);', [ serverID ] )
+        .then(
+            (val) => {
+                var query = val[0][0]
+
+                for ( var i = 0; i < query.length; i++ ){
+                    if ( query[i].name == name ){
+                        var channelExists = {
+                            error: {
+                                code: 409,
+                                message: "Channel already exists in this server.",
+                                status: "CHANNEL_ALREADY_EXISTS"
+                            }
+                        };
+                        return channelExists;
+                    }
+                }
+
+                return knex.raw( "CALL AddChannel(?, ?, ?)", [ serverID, name, desc ] );
             }
         )
     }

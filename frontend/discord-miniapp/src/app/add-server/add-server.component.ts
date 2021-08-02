@@ -35,7 +35,7 @@ export class AddServerComponent implements OnInit {
 
   onSubmit(){
     var reg = this.serverForm.value;
-    this.api.addServer( reg.name, reg.picture).subscribe(
+    this.api.addServer( reg.name, reg.picture ).subscribe(
       (data) => {
         window.location.reload();
         console.log( data );

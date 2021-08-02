@@ -37,13 +37,13 @@ const controller = {
         .then(
             (val) => {
                 if ( val ){
-                    loggedInUser = val[0][0][0];
+                    loggedInUser = val;
                     res.status(200).json({
                         data: {
-                            userID: loggedInUser.userID,
-                            email: loggedInUser.email,
-                            displayName: loggedInUser.displayName,
-                            picture: loggedInUser.picture
+                            userID: val.userID,
+                            email: val.email,
+                            displayName: val.displayName,
+                            picture: val.picture
                         }
                     });
                 }
@@ -410,8 +410,8 @@ const controller = {
                                 name: currentServer.name,
                                 picture: currentServer.picture,
                                 channels: val[0],
-                                users: val[1],
-                                roles: val[2]
+                                roles: val[1],
+                                users: val[2]
                             }
                         });
                     }
@@ -456,24 +456,12 @@ const controller = {
                     });
                     return;
                 }
-                var serverInfo = db.getServerInfo( val.userID, servID );
-
-                if ( serverInfo ){
-                    console.log( "Server info retrieved!" );
-                    return Promise.resolve( serverInfo );
-                }
-                else{
-                    res.status(400).json({
-                        error: {
-                            code: 400,
-                            message: "Server not found.",
-                            status: "SERVER_NOT_FOUND"
-                        }
-                    });
-                    return;
-                }
-
-
+                var serverInfo = db.getServerInfo( val.userID, servID )
+                .then(
+                    (val) => {
+                        return Promise.resolve( serverInfo );
+                    }
+                );
             },
             (reason) => {
                 res.status(404).json({
@@ -729,64 +717,77 @@ const controller = {
         })
     },
 
-    createChannel: function(req, res){
-        let server = servers[ req.params.serverID - 1 ];
-        let channelInServer = undefined;
-
-        if ( !server ){
-            res.status(400).json({
-                error: {
-                    code: 400,
-                    message: "The server you are modifying does not exist.",
-                    status: "SERVER_NOT_FOUND"
-                }
-            })
-        }
+    postChannel: function(req, res){
 
         new Promise( (resolve, reject) => {
-            server.channels.forEach( (val, key) => {
-                if ( channelInServer ){
+            if ( loggedInUser ){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
+        })
+        .then(
+            (val) => {
+                var pendingChannel = req.body;
+                var servID = req.params.serverID;
+
+                if ( pendingChannel.name === "" ){
+                    res.status(400).json({
+                        error: {
+                            code: 400,
+                            message: "Channel name is empty.",
+                            status: "CHANNEL_NAME_EMPTY"
+                        }
+                    });
+
                     return;
                 }
 
-                if ( val.name == req.body.name ){
-                    console.log( "Channel already exists on server.");
-                    channelInServer = val;
-                }
-            });
-
-            if ( !channelInServer ){
-                console.log( "Assigning the channel to the server.");
-                var object = {
-                    "channelID": channels.length + 1,
-                    "name": req.body.name,
-                    "description": req.body.description,
-                    "categoryID": req.body.categoryID,
-                    "roles": [],
-                    "messages": []
-                }
-                
-                server.channels.push( object );
-                channels.push( object );
-
-                resolve( object );
-            }
-
-            reject( channelInServer );
-        })
-        .then( 
-            (val) => {
-                res.status(200).json( { data: val } );
-            },
-
-            (reason) => {
-                res.status(409).json({
-                    error: {
-                        code: 409,
-                        message: "Channel " + reason.name + " already exists in server.",
-                        status: "CHANNEL_ALREADY_EXISTS"
+                var serverInfo = db.getServerInfo( val.userID, servID )
+                .then(
+                    (val) => {
+                        console.log( "Server info retrieved!" );
+                        return { 'server-info': val, 'channel': pendingChannel };
                     }
-                })
+                );
+                
+                return Promise.resolve( serverInfo );
+            },
+            (reason) => {
+                res.status(404).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .then(
+            (val) => {
+                var currentServer = val['server-info'];
+                var pendingChannel = val['channel'];
+
+                db.addChannel( currentServer.serverID, pendingChannel.name, pendingChannel.description )
+                .then(
+                    (val) => {
+
+                        if ( val.error.code == 409 ){
+                            res.status(409).send( val );
+                        }
+                        else{
+                            res.status(200).json({
+                                data: {
+                                    server: currentServer.name,
+                                    name: pendingChannel.name,
+                                    description: pendingChannel.description
+                                }
+                            });
+                        }
+                        
+                    }
+                );
             }
         )
         .catch( 
