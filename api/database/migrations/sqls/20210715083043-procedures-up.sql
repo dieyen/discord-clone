@@ -94,7 +94,7 @@ CREATE PROCEDURE `ListServersOfUser`(
     IN `userID` INT
 )
 BEGIN
-    SELECT `servers`.`name`, `servers`.`picture`
+    SELECT `servers`.`serverID`, `servers`.`name`, `servers`.`picture`
     FROM `servers`
     INNER JOIN `users-servers`
         ON `servers`.`serverID` = `users-servers`.`serverID`

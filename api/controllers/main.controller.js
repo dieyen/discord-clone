@@ -773,7 +773,7 @@ const controller = {
                 .then(
                     (val) => {
 
-                        if ( val.error.code == 409 ){
+                        if ( val['error'] ){
                             res.status(409).send( val );
                         }
                         else{
