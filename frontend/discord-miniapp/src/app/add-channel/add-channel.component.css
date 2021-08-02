@@ -1,0 +1,14 @@
+h2, h3 {
+    text-align: center;
+    color: white;
+}
+
+.form{
+    color: white;
+
+    /* background-color: cornflowerblue; */
+}
+
+.add-channel{
+    vertical-align: middle;
+}

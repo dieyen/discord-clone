@@ -14,3 +14,17 @@ h3{
   text-align: center;
   vertical-align: middle;
 }
+
+.add-channel{
+  vertical-align: middle;
+}
+
+.add-server{
+  font-size: 150%;
+}
+
+li:active,
+li:focus,
+li:hover {
+  background-color: #2a1e5c;
+}

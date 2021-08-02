@@ -15,6 +15,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AddServerComponent } from './add-server/add-server.component';
+import { AddChannelComponent } from './add-channel/add-channel.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AddServerComponent } from './add-server/add-server.component';
     NavbarComponent,
     LoginComponent,
     DashboardComponent,
-    AddServerComponent
+    AddServerComponent,
+    AddChannelComponent
   ],
   imports: [
     BrowserModule,

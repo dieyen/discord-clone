@@ -23,6 +23,7 @@ export class ApiService {
   private headers = {
     'Content-Type': 'application/json'
   }
+  private selectedServer: number = 0;
   
   constructor(
     private httpClient: HttpClient,
@@ -70,7 +71,15 @@ export class ApiService {
   }
 
   getChannels(serverID: number){
-    return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers/${serverID}` ).pipe( retry(3), catchError(this.handleError) );
+    return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers/${serverID}/channels` ).pipe( retry(3), catchError(this.handleError) );
+  }
+
+  getSelectedServer(){
+    return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers/${this.selectedServer}`).pipe( retry(3), catchError(this.handleError) );
+  }
+
+  getSelectedServerID(){
+    return this.selectedServer;
   }
 
   registerUser(email: string, displayName: string, picture: string, password: string){
@@ -89,11 +98,14 @@ export class ApiService {
     return this.httpClient.post<any>( `${this.REST_API_SERVER}/login`, body, { headers: this.headers } ).subscribe(
       (data) => {
         var user = data.data;
-        this.setUser( user.userID, user.email, user.displayName, user.picture );6
+        this.setUser( user.userID, user.email, user.displayName, user.picture );
         this.router.navigate( ['/dashboard'] );
-        console.log( "Data:", data.data );
       }
     );
+  }
+
+  setSelectedServer( serverID: number ){
+    this.selectedServer = serverID;
   }
 
   addServer(name: string, picture: string){
@@ -102,5 +114,13 @@ export class ApiService {
     }
 
     return this.httpClient.post( `${this.REST_API_SERVER}/servers`, body, { headers: this.headers } )
+  }
+
+  addChannel(serverID: number, name: string, description: string){
+    const body = {
+      name, description
+    }
+
+    return this.httpClient.post( `${this.REST_API_SERVER}/servers/${serverID}/channels`, body, { headers: this.headers } );
   }
 }

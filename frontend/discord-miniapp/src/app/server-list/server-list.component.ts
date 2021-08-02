@@ -1,7 +1,4 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
-
-import { DisplayChannelsService } from '../_services/display-channels.service';
-import { Server, servers } from '../_types/server';
 import { ApiService } from '../_services/api.service';
 import { User } from '../_types/user';
 
@@ -20,26 +17,28 @@ export class ServerListComponent implements OnInit {
   user?: User;
 
   constructor(
-    private api: ApiService,
-    private displayChannelsService: DisplayChannelsService
+    private api: ApiService
   ) { }
 
   ngOnInit(): void {
     this.api.getServers().subscribe(
       (data) => {
+        console.log( data );
         var servers = data.data;
         this.serverList = servers;
-        console.log( this.serverList );
       }
     )
     this.user = this.api.getUser();
   }
 
   selectServer(serverID: number){
-    console.log( serverID );
-    this.api.getChannels(serverID).subscribe(
+    this.api.setSelectedServer( serverID );
+    // console.log( "Server ID: ", this.api.getSelectedServerID() );
+
+    this.api.getSelectedServer().subscribe(
       (data) => {
         var serverData = JSON.stringify( data.data );
+        // console.log( serverData );
         this.serverEmitter.emit(serverData);
       }
     );
@@ -49,5 +48,4 @@ export class ServerListComponent implements OnInit {
     this.toggleAddServer = !this.toggleAddServer;
     this.displayAddServerComponent.emit(this.toggleAddServer);
   }
-
 }

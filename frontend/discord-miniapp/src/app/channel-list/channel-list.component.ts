@@ -1,19 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
+import { ApiService } from '../_services/api.service';
+import { User } from '../_types/user';
 
-import { Server, servers } from '../_types/server';
-import { DisplayChannelsService } from '../_services/display-channels.service';
 @Component({
   selector: 'app-channel-list',
   templateUrl: './channel-list.component.html',
   styleUrls: ['./channel-list.component.css']
 })
 export class ChannelListComponent implements OnInit {
-  @Input() channels = [];
+  channels = [];
+  
+  @Output() displayAddChannelComponent = new EventEmitter<boolean>();
+  @Output() channelEmitter = new EventEmitter<string>();
+
+  toggleAddChannel = false;
 
   constructor(
-    private route: ActivatedRoute,
-    private displayChannelsService: DisplayChannelsService
+    private api: ApiService
   ) { }
   
   viewChannels(){
@@ -21,5 +24,27 @@ export class ChannelListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.api.getChannels( this.api.getSelectedServerID() ).subscribe(
+      (data) => {
+        var channels = data.data;
+        this.channels = channels;
+      }
+    )
   }
+  
+  getChannels(): void {
+    this.api.getChannels( this.api.getSelectedServerID() ).subscribe(
+      (data) => {
+        var channels = data.data;
+        this.channels = channels;
+        // console.log( this.channels );
+      }
+    )
+  }
+
+  addChannel(){
+    this.toggleAddChannel = !this.toggleAddChannel;
+    this.displayAddChannelComponent.emit( this.toggleAddChannel );
+  }
+
 }
