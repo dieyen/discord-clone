@@ -1,136 +1,102 @@
 var knex = require('./connect-db');
 
 const setup = {
-    checkConnection: function(){
-        console.log( knex );
-    },
+    // listServersOfUser: function( userID ){
+    //     return knex.raw( 'CALL ListServersOfUser(?)', [ userID ] )
+    //     .then(
+    //         (val) => {
+    //             var returnValue = val[0][0];
+    //             return Promise.resolve( returnValue );
+    //         }
+    //     );
+    // },
 
-    loginUser: function(email, password){
-        return knex.raw( 'CALL LoginUser(?, ?);', [ email, password ] )
-        .then(
-            (val) => {
-                return val[0][0][0];
-            }
-        );
-    },
+    // getServerInfo: function(userID, serverID){
+    //     return knex.raw( 'CALL GetServerInfo(?, ?);', [ userID, serverID ] )
+    //     .then(
+    //         (val) => {
+    //             if ( val[0][0].length != 0 ){
+    //                 var serverInfo = val[0][0][0];
+    //                 return Promise.resolve( serverInfo );
+    //             }
+    //             else{
+    //                 return;
+    //             }
+    //         }
+    //     );;
 
-    postUser: function(email, displayName, picture, password){
-        return knex.raw( 'CALL AddUser(?, ?, ?, ?)', [ email, displayName, picture, password ] );
-    },
+    // },
 
-    listUsers: function(){
-        return knex.raw( 'CALL ListUsers();' )
-        .then(
-            (val) => {
-                return val[0][0];
-            }
-        );
-    },
+    // getServerChannels: function(serverID){
+    //     return knex.raw( 'CALL GetServerChannels(?);', [ serverID ] )
+    //     .then(
+    //         (val) => {
+    //             var channelsList = val[0][0];
+    //             return Promise.resolve( channelsList );
+    //         }
+    //     );
+    // },
 
-    getUser: function(userID){
-        return knex.raw( 'CALL GetUser(?)', [ userID ] );
-    },
+    // getServerRoles: function(serverID){
+    //     return knex.raw( 'CALL GetServerRoles(?);', [ serverID ] )
+    //     .then(
+    //         (val) => {
+    //             var rolesList = val[0][0];
+    //             return Promise.resolve( rolesList );
+    //         }
+    //     );
+    // },
 
-    addServer: function(userID, name, picture){
-        return knex.raw( 'CALL AddServer(?, ?, ?)', [ userID, name, picture ] );
-    },
+    // getServerUsers: function(serverID){
+    //     return knex.raw( 'CALL GetServerUsers(?);', [ serverID ] )
+    //     .then(
+    //         (val) => {
+    //             var usersList = val[0][0];
+    //             return Promise.resolve( usersList );
+    //         }
+    //     );
+    // },
 
-    listServersOfUser: function( userID ){
-        return knex.raw( 'CALL ListServersOfUser(?)', [ userID ] )
-        .then(
-            (val) => {
-                var returnValue = val[0][0];
-                return Promise.resolve( returnValue );
-            }
-        );
-    },
+    // addRole: function(serverID, role, isAdmin){
+    //     return knex.raw( 'CALL GetServerRoles(?)', [ serverID ] )
+    //     .then(
+    //         (val) => {
+    //             var query = val[0][0]
 
-    getServerInfo: function(userID, serverID){
-        return knex.raw( 'CALL GetServerInfo(?, ?);', [ userID, serverID ] )
-        .then(
-            (val) => {
-                if ( val[0][0].length != 0 ){
-                    var serverInfo = val[0][0][0];
-                    return Promise.resolve( serverInfo );
-                }
-                else{
-                    return;
-                }
-            }
-        );;
+    //             for ( var i = 0; i < query.length; i++ ){
+    //                 if ( query[i].name == role ){
+    //                     return knex.raw( 'CALL UpdateRole(?, ?)', [ query[i].roleID, isAdmin ])
+    //                 }
+    //             }
 
-    },
+    //             return knex.raw( 'CALL AddRoleToServer(?, ?, ?)', [ serverID, role, isAdmin ] )
+    //         }
+    //     )
+    // },
 
-    getServerChannels: function(serverID){
-        return knex.raw( 'CALL GetServerChannels(?);', [ serverID ] )
-        .then(
-            (val) => {
-                var channelsList = val[0][0];
-                return Promise.resolve( channelsList );
-            }
-        );
-    },
+    // addChannel: function(serverID, name, desc){
+    //     return knex.raw( 'CALL GetServerChannels(?);', [ serverID ] )
+    //     .then(
+    //         (val) => {
+    //             var query = val[0][0]
 
-    getServerRoles: function(serverID){
-        return knex.raw( 'CALL GetServerRoles(?);', [ serverID ] )
-        .then(
-            (val) => {
-                var rolesList = val[0][0];
-                return Promise.resolve( rolesList );
-            }
-        );
-    },
+    //             for ( var i = 0; i < query.length; i++ ){
+    //                 if ( query[i].name == name ){
+    //                     var channelExists = {
+    //                         error: {
+    //                             code: 409,
+    //                             message: "Channel already exists in this server.",
+    //                             status: "CHANNEL_ALREADY_EXISTS"
+    //                         }
+    //                     };
+    //                     return channelExists;
+    //                 }
+    //             }
 
-    getServerUsers: function(serverID){
-        return knex.raw( 'CALL GetServerUsers(?);', [ serverID ] )
-        .then(
-            (val) => {
-                var usersList = val[0][0];
-                return Promise.resolve( usersList );
-            }
-        );
-    },
-
-    addRole: function(serverID, role, isAdmin){
-        return knex.raw( 'CALL GetServerRoles(?)', [ serverID ] )
-        .then(
-            (val) => {
-                var query = val[0][0]
-
-                for ( var i = 0; i < query.length; i++ ){
-                    if ( query[i].name == role ){
-                        return knex.raw( 'CALL UpdateRole(?, ?)', [ query[i].roleID, isAdmin ])
-                    }
-                }
-
-                return knex.raw( 'CALL AddRoleToServer(?, ?, ?)', [ serverID, role, isAdmin ] )
-            }
-        )
-    },
-
-    addChannel: function(serverID, name, desc){
-        return knex.raw( 'CALL GetServerChannels(?);', [ serverID ] )
-        .then(
-            (val) => {
-                var query = val[0][0]
-
-                for ( var i = 0; i < query.length; i++ ){
-                    if ( query[i].name == name ){
-                        var channelExists = {
-                            error: {
-                                code: 409,
-                                message: "Channel already exists in this server.",
-                                status: "CHANNEL_ALREADY_EXISTS"
-                            }
-                        };
-                        return channelExists;
-                    }
-                }
-
-                return knex.raw( "CALL AddChannel(?, ?, ?)", [ serverID, name, desc ] );
-            }
-        )
-    }
+    //             return knex.raw( "CALL AddChannel(?, ?, ?)", [ serverID, name, desc ] );
+    //         }
+    //     )
+    // }
 }
 
 module.exports = setup

@@ -1,0 +1,23 @@
+Combine users-servers into one table
+	> Check the joined query result for the flat table column
+
+Remove users-roles and just have users table have a (JSON Array Object) roles array column
+
+Remove servers-roles and just have servers table have a roles array column
+
+Remove servers-channels and just have channels table have a serverID column
+
+Remove servers table and just use the users-servers table for server references?
+
+Retain roles for lookups
+
+Remove channels-messages and just use messages with a channelID column
+
+Remove channels-roles and just have channels table have a (JSON Array Object) roles array column
+
+RETAINED TABLES:
+Servers (Server-User)
+Channels (Channel-Server-Role[])	
+Messages (Message-Channel-User) // all columns included
+Users (Users-Role[])
+Roles (Roles)

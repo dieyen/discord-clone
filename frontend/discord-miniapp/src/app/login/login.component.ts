@@ -34,7 +34,13 @@ export class LoginComponent implements OnInit {
 
   onSubmit(){
     var reg = this.userForm.value;
-    this.api.loginUser( reg.email, reg.password );
+    this.api.loginUser( reg.email, reg.password ).subscribe(
+      (data) => {
+        var user = data.data;
+        this.api.setUser( user.userID, user.email, user.displayName, user.picture );
+        this.router.navigate( ['/dashboard'] );
+      }
+    );
   }
 
 }

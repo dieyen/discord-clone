@@ -95,13 +95,7 @@ export class ApiService {
       email, password
     }
 
-    return this.httpClient.post<any>( `${this.REST_API_SERVER}/login`, body, { headers: this.headers } ).subscribe(
-      (data) => {
-        var user = data.data;
-        this.setUser( user.userID, user.email, user.displayName, user.picture );
-        this.router.navigate( ['/dashboard'] );
-      }
-    );
+    return this.httpClient.post<any>( `${this.REST_API_SERVER}/login`, body, { headers: this.headers } )
   }
 
   setSelectedServer( serverID: number ){
