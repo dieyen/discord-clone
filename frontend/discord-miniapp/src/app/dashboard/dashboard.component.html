@@ -1,8 +1,8 @@
-<div class="container">
+<div class="dashboard container">
     <div>
         <app-server-list (displayAddServerComponent)="toggleAddServer($event)" (serverEmitter)="setServer($event)" ></app-server-list>
     </div>
-    <div *ngIf="channels.length > 0">
+    <div>
         <app-channel-list (displayAddChannelComponent)="toggleAddChannel($event)"></app-channel-list>
     </div>
     <div *ngIf="isAddServer">
@@ -10,5 +10,11 @@
     </div>
     <div *ngIf="isAddChannel">
         <app-add-channel></app-add-channel>
+    </div>
+    <div>
+        <app-channel-detail></app-channel-detail>
+    </div>
+    <div>
+        <app-user-list></app-user-list>
     </div>
 </div>

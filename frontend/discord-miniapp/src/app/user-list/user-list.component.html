@@ -1,0 +1,12 @@
+<div class="users-list" id="sidebar">
+    <ul class="nav flex-column text-white w-100">
+        <h3 class="text-white">Users</h3>
+        
+        <li *ngFor="let user of userList">
+            <p class="user-entry"><span class="align-middle"> {{ user['display_name'] }} </span></p>
+        </li>
+        <li (click)="addUser()">
+            <p class="user-entry"><span class="align-middle add-user">+</span></p>
+        </li>
+    </ul>
+</div>

@@ -24,22 +24,23 @@ export class ChannelListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.api.getChannels( this.api.getSelectedServerID() ).subscribe(
+  }
+  
+  retrieveChannels(): void {
+    this.api.getChannels().subscribe(
       (data) => {
         var channels = data.data;
         this.channels = channels;
       }
     )
   }
-  
-  getChannels(): void {
-    this.api.getChannels( this.api.getSelectedServerID() ).subscribe(
-      (data) => {
-        var channels = data.data;
-        this.channels = channels;
-        // console.log( this.channels );
-      }
-    )
+
+  setChannels(channels: []){
+    this.channels = channels;
+  }
+
+  getChannels(){
+    return this.channels;
   }
 
   addChannel(){

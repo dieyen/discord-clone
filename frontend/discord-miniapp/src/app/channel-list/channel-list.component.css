@@ -1,8 +1,8 @@
 .channels-list {
-    width: 180px;
+    width: 10%;
     height: 100%;
     position: absolute;
-    margin-left: 180px;
+    margin-left: 10%;
     background-color: rgb(3, 10, 24);
     transition: 0.5s;
   }

@@ -70,11 +70,11 @@ export class ApiService {
     return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers`).pipe( retry(3), catchError(this.handleError) );
   }
 
-  getChannels(serverID: number){
-    return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers/${serverID}/channels` ).pipe( retry(3), catchError(this.handleError) );
+  getChannels(){
+    return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers/${this.selectedServer}/channels` ).pipe( retry(3), catchError(this.handleError) );
   }
 
-  getSelectedServer(){
+  getUsersInServer(){
     return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers/${this.selectedServer}`).pipe( retry(3), catchError(this.handleError) );
   }
 

@@ -8,7 +8,7 @@ CREATE PROCEDURE `AddUser`(
 )
 BEGIN
     INSERT INTO `users` (`email`, `display_name`, `user_picture`, `password`, `roles`) VALUES
-    ( `p_email`, `p_display_name`, `p_picture`, `p_password`. CAST( '[]' AS JSON) );
+    ( `p_email`, `p_display_name`, `p_picture`, `p_password`, CAST( '[]' AS JSON) );
 END;
 
 CREATE PROCEDURE `LoginUser`(
@@ -47,9 +47,11 @@ CREATE PROCEDURE `AddServer`(
 )
 BEGIN
     DECLARE `q_role_id` INT;
+    DECLARE `q_server_id` INT;
+    SELECT COUNT(`servers`.`server_id`) INTO `q_server_id` FROM `servers` ORDER BY `servers`.`server_id` DESC;
 
-    INSERT INTO `servers` (`server_name`, `server_picture`, `user_id`, `email`, `display_name`, `user_picture`) VALUES
-    ( `p_server_name`, `p_server_picture`, `p_user_id`, `p_email`, `p_display_name`, `p_user_picture`);
+    INSERT INTO `servers` ( `server_id`, `server_name`, `server_picture`, `user_id`, `email`, `display_name`, `user_picture`) VALUES
+    ( `q_server_id`+1, `p_server_name`, `p_server_picture`, `p_user_id`, `p_email`, `p_display_name`, `p_user_picture`);
 
     INSERT INTO `roles` (`name`, `is_admin`) VALUES
     ("Admin", 1);
@@ -59,4 +61,37 @@ BEGIN
     UPDATE `users`
 	SET `users`.`roles` = JSON_ARRAY_APPEND(`users`.`roles`, '$',  CAST( CONCAT( '{"role_id":', `q_role_id`,',"role_name": "Admin", "is_admin": 1}') AS JSON) )
 	WHERE `users`.`user_id` = `p_user_id`;
+END;
+
+CREATE PROCEDURE `GetServersOfUser`(
+    IN `p_user_id` INT
+)
+BEGIN
+    SELECT * FROM `servers`
+    WHERE `servers`.`user_id` = `p_user_id`;
+END;
+
+CREATE PROCEDURE `GetUsersInServer`(
+    IN `p_server_id` INT
+)
+BEGIN
+    SELECT * FROM `servers`
+    WHERE `servers`.`server_id` = `p_server_id`;
+END;
+
+CREATE PROCEDURE `GetChannelsInServer`(
+    IN `p_server_id` VARCHAR(100)
+)
+BEGIN
+    SELECT * FROM `channels`
+    WHERE `channels`.`server_id` = `p_server_id`;
+END;
+
+CREATE PROCEDURE `GetMessagesInChannel`(
+    IN `p_channel_id` INT
+)
+BEGIN
+    SELECT * FROM `messages`
+    WHERE `messages`.`channel_id` = `p_channel_id`
+    ORDER BY `messages`.`datetime` DESC;
 END;

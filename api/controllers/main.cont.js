@@ -248,6 +248,131 @@ const controller = {
             }
         )
     },
+
+    listServersInUser: function(req, res){
+        new Promise( (resolve, reject) => {
+            if ( loggedInUser ){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
+        })
+        .then(
+            (val) => {
+                db.getServersOfUser( val.user_id )
+                .then(
+                    (val) => {
+                        res.status(200).json( { data: val } );
+                    }
+                )
+            },
+
+            (reason) => {
+                res.status(404).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .catch(
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
+                    }
+                })
+            }
+        )
+    },
+
+    getServerInUser: function(req, res){
+        new Promise( (resolve, reject) => {
+            if ( loggedInUser ){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
+        })
+        .then( 
+            (val) => {
+                db.getServer(req.params.serverID)
+                .then(
+                    (val) => {
+                        res.status(200).json( { data: val } );
+                    }
+                )
+            },
+            (reason) => {
+                res.status(404).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .catch( 
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
+                    }
+                })
+        })
+    },
+
+    listChannelsInServer: function(req, res){
+        
+        new Promise( (resolve, reject) => {
+            if ( loggedInUser ){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
+        })
+        .then(
+            (val) => {
+                db.getChannelsInServer( req.params.serverID )
+                .then(
+                    (val) => {
+                        res.status(200).json({
+                            data: val
+                        })
+                    }
+                )
+            },
+            () => {
+                res.status(403).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .catch( 
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
+                    }
+                })
+        })
+    }
 }
 
 module.exports = controller;

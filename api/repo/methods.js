@@ -29,12 +29,39 @@ const commands = {
     },
 
     getUser: function(userID){
-        return knex.raw( 'CALL GetUser(?)', [ userID ] );
+        return db.raw( 'CALL GetUser(?)', [ userID ] );
     },
 
     addServer: function(serverName, serverPicture, userID, email, displayName, userPicture){
-        return db.raw( 'CALL AddServer(?, ?, ?, ?, ?, ?)', [ serverName, serverPicture, userID, email, displayName, userPicture ] );
+        return db.raw( 'CALL AddServer(?, ?, ?, ?, ?, ?);', [ serverName, serverPicture, userID, email, displayName, userPicture ] );
     },
+
+    getServersOfUser: function(userID){
+        return db.raw( 'CALL GetServersOfUser(?);', [ userID ] )
+        .then(
+            (val) => {
+                return val[0][0];
+            }
+        );
+    },
+
+    getServer: function(serverID){
+        return db.raw( 'CALL GetUsersInServer(?)', [ serverID ] )
+        .then(
+            (val) => {
+                return val[0][0];
+            }
+        )
+    },
+
+    getChannelsInServer: function(serverID){
+        return db.raw( 'CALL GetChannelsInServer(?)', [ serverID ] )
+        .then(
+            (val) => {
+                return val[0][0];
+            }
+        )
+    }
 }
 
 module.exports = commands;

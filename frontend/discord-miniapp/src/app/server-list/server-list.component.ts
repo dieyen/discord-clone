@@ -9,7 +9,7 @@ import { User } from '../_types/user';
 })
 export class ServerListComponent implements OnInit {
   @Output() displayAddServerComponent = new EventEmitter<boolean>();
-  @Output() serverEmitter = new EventEmitter<string>();
+  @Output() serverEmitter = new EventEmitter<number>();
 
   toggleAddServer = false;
   
@@ -34,14 +34,7 @@ export class ServerListComponent implements OnInit {
   selectServer(serverID: number){
     this.api.setSelectedServer( serverID );
     // console.log( "Server ID: ", this.api.getSelectedServerID() );
-
-    this.api.getSelectedServer().subscribe(
-      (data) => {
-        var serverData = JSON.stringify( data.data );
-        // console.log( serverData );
-        this.serverEmitter.emit(serverData);
-      }
-    );
+    this.serverEmitter.emit(this.api.getSelectedServerID());
   }
 
   addServer(){

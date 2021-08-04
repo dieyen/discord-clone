@@ -15,8 +15,8 @@ router.get( '/users/', controller.listUsers );
 
 // /* Routings for Servers */
 router.post( '/servers/', controller.postServer );                // /server/
-// router.get( '/servers/', controller.listServersInUser );         // /servers/
-// router.get( '/servers/:serverID', controller.getServerInUser );   // /server/:serverID/
+router.get( '/servers/', controller.listServersInUser );         // /servers/
+router.get( '/servers/:serverID', controller.getServerInUser );   // /server/:serverID/
 
 // /* Routings for Roles */
 // router.post( '/user/servers/:serverID/roles/', controller.postRole );                 // /role/
@@ -25,7 +25,7 @@ router.post( '/servers/', controller.postServer );                // /server/
 
 // /* Routings for Channels */
 // router.post( '/servers/:serverID/channels/', controller.postChannel );
-// router.get( '/servers/:serverID/channels/', controller.listChannelsInServer );
+router.get( '/servers/:serverID/channels/', controller.listChannelsInServer );
 // router.get( '/servers/:serverID/channels/:channelID', controller.getChannelInServer );
 /* GET home page. */
 

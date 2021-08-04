@@ -16,6 +16,8 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AddServerComponent } from './add-server/add-server.component';
 import { AddChannelComponent } from './add-channel/add-channel.component';
+import { UserListComponent } from './user-list/user-list.component';
+import { ChannelDetailComponent } from './channel-detail/channel-detail.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { AddChannelComponent } from './add-channel/add-channel.component';
     LoginComponent,
     DashboardComponent,
     AddServerComponent,
-    AddChannelComponent
+    AddChannelComponent,
+    UserListComponent,
+    ChannelDetailComponent
   ],
   imports: [
     BrowserModule,
