@@ -8,6 +8,12 @@ services:
         environment:
              - MYSQL_ROOT_PASSWORD=password
              - MYSQL_DATABASE=mydb
+    
+    redis:
+        image: redis
+        ports:
+            - 6379:6379
+        command: redis-server        
 
     mini-app:
         build: ./api
@@ -24,6 +30,7 @@ services:
             - DB_PASSWORD=password
         depends_on:
             - db_server
+            - redis
         command: "bash start.sh db_server:3306"
 
     angular:
@@ -38,3 +45,4 @@ services:
         depends_on:
             - mini-app
         command: "bash start.sh"
+    

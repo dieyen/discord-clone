@@ -4,9 +4,7 @@ let loggedInUser = undefined;
 
 const controller = {
     postUser: function(req, res){
-        console.log( "Controller: POST User" );
         let pendingUser = req.body;
-        console.log( "Controller: Request body:", pendingUser );
 
         if ( pendingUser.email === "" ){
             res.status(400).json({
@@ -37,16 +35,14 @@ const controller = {
                 }
             });
         }
-        console.log( "Controller: Request body clear." );
         db.addUser( pendingUser.email, pendingUser.displayName, pendingUser.picture, pendingUser.password )
         .then(
             (val) => {
-                console.log( val );
                 res.status(200).json({ 
                     data: {
-                        email: pendingUser.email,
-                        displayName: pendingUser.displayName,
-                        picture: pendingUser.picture
+                        email: val.email,
+                        displayName: val.display_name,
+                        picture: val.picture
                     } 
                 })
             }
@@ -91,6 +87,7 @@ const controller = {
             (val) => {
                 if ( val ){
                     loggedInUser = val;
+                    console.log(val);
                     res.status(200).json({
                         data: {
                             userID: val.user_id,
@@ -213,7 +210,7 @@ const controller = {
                     return;
                 }
 
-                db.addServer( pendingServer.name, pendingServer.picture, val.user_id, val.email, val.display_name, val.user_picture)
+                db.addServer( pendingServer.name, pendingServer.picture, val.userID, val.email, val.display_name, val.user_picture)
                 .then(
                     (val) => {
                         res.status(200).json({
@@ -260,9 +257,9 @@ const controller = {
         })
         .then(
             (val) => {
-                db.getServersOfUser( val.user_id )
+                db.getServersOfUser( val.userID )
                 .then(
-                    (val) => {
+                    (val) => {;
                         res.status(200).json( { data: val } );
                     }
                 )
@@ -302,7 +299,7 @@ const controller = {
         })
         .then( 
             (val) => {
-                db.getServer(req.params.serverID)
+                db.getServer( val.userID, req.params.serverID)
                 .then(
                     (val) => {
                         res.status(200).json( { data: val } );

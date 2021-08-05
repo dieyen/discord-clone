@@ -1,10 +1,10 @@
 /* Replace with your SQL commands */
 CREATE TABLE IF NOT EXISTS `mydb`.`servers` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `server_id` INT NOT NULL,
+    `server_id` VARCHAR(127) NOT NULL,
     `server_name` VARCHAR(100),
     `server_picture` VARCHAR(255) NULL,
-    `user_id` INT NOT NULL,
+    `user_id` VARCHAR(127) NOT NULL,
     `email` VARCHAR(100) NOT NULL,
     `display_name` VARCHAR(45) NOT NULL,
     `user_picture` VARCHAR(255) NULL,
@@ -13,27 +13,27 @@ CREATE TABLE IF NOT EXISTS `mydb`.`servers` (
 );
 
 CREATE TABLE IF NOT EXISTS `mydb`.`roles`(
-    `role_id` INT NOT NULL AUTO_INCREMENT,
+    `role_id` VARCHAR(127) NOT NULL,
     `name` VARCHAR(300) NOT NULL,
     `is_admin` BOOLEAN,
     PRIMARY KEY (`role_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `mydb`.`channels`(
-    `channel_id` INT NOT NULL AUTO_INCREMENT,
+    `channel_id` VARCHAR(127) NOT NULL,
     `name` VARCHAR(100) NOT NULL,
     `description` VARCHAR(255) NOT NULL,
-    `server_id` INT NOT NULL,
+    `server_id` VARCHAR(127) NOT NULL,
     `roles` JSON DEFAULT NULL,
     PRIMARY KEY (`channel_id`),
     INDEX( `server_id` )
 );
 
 CREATE TABLE IF NOT EXISTS `mydb`.`messages`(
-    `message_id` INT NOT NULL AUTO_INCREMENT,
+    `message_id` VARCHAR(127) NOT NULL,
     `content` TEXT NOT NULL,
     `datetime` DATETIME,
-    `channel_id` INT NOT NULL,
+    `channel_id` VARCHAR(127) NOT NULL,
     `channel_name` VARCHAR(100) NOT NULL,
     `description` VARCHAR(255) NOT NULL,
     `email` VARCHAR(100) NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`messages`(
 );
 
 CREATE TABLE IF NOT EXISTS `mydb`.`users`(
-    `user_id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` VARCHAR(127) NOT NULL,
     `email` VARCHAR(100) NOT NULL UNIQUE,
     `display_name` VARCHAR(45) NOT NULL,
     `user_picture` VARCHAR(255) NULL,
@@ -52,3 +52,5 @@ CREATE TABLE IF NOT EXISTS `mydb`.`users`(
     `roles` JSON,
     PRIMARY KEY (`user_id`)
 );
+
+-- Add Users-Roles
