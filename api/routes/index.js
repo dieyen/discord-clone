@@ -17,14 +17,15 @@ router.get( '/users/', controller.listUsers );
 router.post( '/servers/', controller.postServer );                // /server/
 router.get( '/servers/', controller.listServersInUser );         // /servers/
 router.get( '/servers/:serverID', controller.getServerInUser );   // /server/:serverID/
+router.get( '/servers/:serverID/users', controller.getUsersInServer );
 
 // /* Routings for Roles */
-// router.post( '/user/servers/:serverID/roles/', controller.postRole );                 // /role/
-// router.get( '/user/servers/:serverID/roles/', controller.listRolesInServer );        // /roles/
+router.post( '/servers/:serverID/roles/', controller.postRole );                 // /role/
+router.get( '/servers/:serverID/roles/', controller.listRolesInServer );        // /roles/
 // router.get( '/user/servers/:serverID/role/:roleID', controller.getRoleInServer );    // /roles/:roleID/?serverID=
 
 // /* Routings for Channels */
-// router.post( '/servers/:serverID/channels/', controller.postChannel );
+router.post( '/servers/:serverID/channels/', controller.postChannel );
 router.get( '/servers/:serverID/channels/', controller.listChannelsInServer );
 // router.get( '/servers/:serverID/channels/:channelID', controller.getChannelInServer );
 /* GET home page. */

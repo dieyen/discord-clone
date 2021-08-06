@@ -16,7 +16,9 @@ CREATE TABLE IF NOT EXISTS `mydb`.`roles`(
     `role_id` VARCHAR(127) NOT NULL,
     `name` VARCHAR(300) NOT NULL,
     `is_admin` BOOLEAN,
-    PRIMARY KEY (`role_id`)
+    `server_id` VARCHAR(127) NOT NULL,
+    PRIMARY KEY (`role_id`),
+    INDEX( `server_id` ) 
 );
 
 CREATE TABLE IF NOT EXISTS `mydb`.`channels`(

@@ -87,7 +87,7 @@ const controller = {
             (val) => {
                 if ( val ){
                     loggedInUser = val;
-                    console.log(val);
+                    // console.log(val);
                     res.status(200).json({
                         data: {
                             userID: val.user_id,
@@ -299,7 +299,7 @@ const controller = {
         })
         .then( 
             (val) => {
-                db.getServer( val.userID, req.params.serverID)
+                db.getServer( req.params.serverID )
                 .then(
                     (val) => {
                         res.status(200).json( { data: val } );
@@ -328,6 +328,84 @@ const controller = {
         })
     },
 
+    getUsersInServer: function(req, res){
+        new Promise( (resolve, reject) => {
+            if ( loggedInUser ){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
+        })
+        .then( 
+            (val) => {
+                db.getUsersInServer( req.params.serverID )
+                .then(
+                    (val) => {
+                        console.log( val );
+                        res.status(200).json( { data: val } );
+                    }
+                )
+            },
+            (reason) => {
+                res.status(404).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .catch( 
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
+                    }
+                })
+        })
+    },
+    
+    postChannel: function(req, res){
+        new Promise( (resolve, reject) => {
+            if (loggedInUser){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
+        })
+        .then(
+            (val) => {
+                var pendingChannel = req.body;
+                db.addChannelInServer( pendingChannel.name, pendingChannel.description, req.params.serverID, pendingChannel.role )
+                .then(
+                    (val) => {
+                        res.status(200).json({
+                            data: {
+                                name: val.name,
+                                desription: val.description
+                            }
+                        })
+                    }
+                )
+            },
+
+            () => {
+                res.status(403).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+    },
+
     listChannelsInServer: function(req, res){
         
         new Promise( (resolve, reject) => {
@@ -340,12 +418,100 @@ const controller = {
         })
         .then(
             (val) => {
-                db.getChannelsInServer( req.params.serverID )
+                db.getChannelsInServer( val.userID, req.params.serverID )
                 .then(
                     (val) => {
                         res.status(200).json({
                             data: val
                         })
+                    }
+                )
+            },
+            () => {
+                res.status(403).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .catch( 
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
+                    }
+                })
+        })
+    },
+
+    postRole: function(req, res){
+        new Promise( (resolve, reject) => {
+            if ( loggedInUser ){
+                resolve( loggedInUser );
+            }
+            else{
+                reject()
+            }
+        })
+        .then(
+            (val) => {
+                var pendingRole = req.body;
+                db.addRoleInServer( req.params.serverID, pendingRole.name, pendingRole.isAdmin )
+                .then(
+                    (val) => {
+                        res.status(200).json({
+                            data: {
+                                name: pendingRole.name,
+                                isAdmin: pendingRole.isAdmin
+                            }
+                        })
+                    }
+                )
+            },
+            () => {
+                res.status(403).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .catch( 
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
+                    }
+                })
+        })
+    },
+
+    listRolesInServer: function(req, res){
+        new Promise( (resolve, reject) => {
+            if (loggedInUser){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
+        })
+        .then(
+            (val) => {
+                db.getRolesInServer( req.params.serverID )
+                .then(
+                    (val) => {
+                        res.status(200).json({
+                            data: val
+                        });
                     }
                 )
             },

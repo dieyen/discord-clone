@@ -75,7 +75,7 @@ export class ApiService {
   }
 
   getUsersInServer(){
-    return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers/${this.selectedServer}`).pipe( retry(3), catchError(this.handleError) );
+    return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers/${this.selectedServer}/users`).pipe( retry(3), catchError(this.handleError) );
   }
 
   getSelectedServerID(){
@@ -112,7 +112,8 @@ export class ApiService {
 
   addChannel(serverID: number, name: string, description: string){
     const body = {
-      name, description
+      name, description,
+      role: []
     }
 
     return this.httpClient.post( `${this.REST_API_SERVER}/servers/${serverID}/channels`, body, { headers: this.headers } );

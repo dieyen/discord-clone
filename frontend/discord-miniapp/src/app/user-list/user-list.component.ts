@@ -20,6 +20,7 @@ export class UserListComponent implements OnInit {
     this.api.getUsersInServer().subscribe(
       (data) => {
         var users = data.data;
+        console.log( users );
         this.userList = users;
       }
     )

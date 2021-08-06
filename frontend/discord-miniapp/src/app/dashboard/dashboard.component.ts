@@ -28,9 +28,6 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  toggleAddServer( state: boolean ){
-    this.isAddServer = state;
-  }
 
   setServer( payload: number ){
     this.channelList.retrieveChannels();
@@ -40,12 +37,40 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  toggleAddServer( state: boolean ){
+    this.isAddChannel = false;
+    this.isChannelSelected = false;
+
+    if ( !this.isAddServer ){
+      this.isAddServer = state;
+    }
+    else{
+      this.isAddServer = !state;
+    }
+  }
+
   toggleAddChannel( state: boolean ){
-    this.isAddChannel = state;
+    this.isAddServer = false;
+    this.isChannelSelected = false;
+
+    if ( !this.isAddChannel ){
+      this.isAddChannel = state;
+    }
+    else{
+      this.isAddChannel = !state;
+    }
   }
 
   toggleSetChannel( state: boolean ){
-    this.isChannelSelected = state;
+    this.isAddServer = false;
+    this.isAddChannel = false;
+
+    if ( !this.isChannelSelected ){
+      this.isChannelSelected = state;
+    }
+    else{
+      this.isChannelSelected = !state;
+    }
   }
 
 }

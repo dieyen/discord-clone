@@ -1,5 +1,3 @@
-/* .dashboard{
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-} */
+.dashboard > div{
+    margin: 0;
+}

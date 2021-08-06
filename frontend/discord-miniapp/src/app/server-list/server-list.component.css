@@ -1,8 +1,6 @@
 .side-navbar {
-    width: 10%;
     height: 100%;
     position: fixed;
-    margin-left: -300px;
     background-color: rgba(10, 09, 01, 1.0);
     transition: 0.5s;
   }

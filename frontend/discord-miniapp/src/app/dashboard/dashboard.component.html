@@ -1,20 +1,15 @@
-<div class="dashboard container">
-    <div>
-        <app-server-list (displayAddServerComponent)="toggleAddServer($event)" (serverEmitter)="setServer($event)" ></app-server-list>
-    </div>
-    <div>
-        <app-channel-list (displayAddChannelComponent)="toggleAddChannel($event)"></app-channel-list>
-    </div>
+<div class="dashboard row no-gutters">
+    <app-server-list (displayAddServerComponent)="toggleAddServer($event)" (serverEmitter)="setServer($event)" ></app-server-list>
+    <app-channel-list (displayAddChannelComponent)="toggleAddChannel($event)"></app-channel-list>
     <div *ngIf="isAddServer">
         <app-add-server></app-add-server>
     </div>
     <div *ngIf="isAddChannel">
         <app-add-channel></app-add-channel>
     </div>
-    <div>
+    <div *ngIf="isChannelSelected">    
         <app-channel-detail></app-channel-detail>
     </div>
-    <div>
-        <app-user-list></app-user-list>
-    </div>
+    
+    <app-user-list></app-user-list>
 </div>

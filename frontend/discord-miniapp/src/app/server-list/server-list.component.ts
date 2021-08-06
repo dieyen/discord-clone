@@ -38,7 +38,7 @@ export class ServerListComponent implements OnInit {
   }
 
   addServer(){
-    this.toggleAddServer = !this.toggleAddServer;
+    this.toggleAddServer = true;
     this.displayAddServerComponent.emit(this.toggleAddServer);
   }
 }
