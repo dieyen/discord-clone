@@ -39,7 +39,7 @@ export class AddUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.users = this.api.getUsersList();
-    console.log( "Setting users:", this.users );
+    // console.log( "Setting users:", this.users );
   }
 
   onSubmit(){
