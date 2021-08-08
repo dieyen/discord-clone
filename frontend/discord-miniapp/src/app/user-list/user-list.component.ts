@@ -8,6 +8,13 @@ import { ApiService } from '../_services/api.service';
 })
 export class UserListComponent implements OnInit {
 
+  @Input() isAddRole: boolean = false;
+  @Output() displayAddRoleComponent = new EventEmitter<boolean>();
+  @Input() isAddUser: boolean = false;
+  @Output() displayAddUserComponent = new EventEmitter<boolean>();
+
+  toggleSelectedServer = false;
+
   userList = [];
   constructor(
     private api: ApiService
@@ -20,14 +27,29 @@ export class UserListComponent implements OnInit {
     this.api.getUsersInServer().subscribe(
       (data) => {
         var users = data.data;
-        console.log( users );
+        // console.log( users );
         this.userList = users;
       }
     )
   }
 
-  addUser(){
+  isServerSelected(state: boolean){
+    this.toggleSelectedServer = state;
+  }
+  
+  selectUser(userID: string){
 
+  }
+
+  addUser(){
+    this.isAddUser = true;
+    this.displayAddUserComponent.emit( this.isAddUser );
+  }
+
+  addRole(){
+    console.log( "You want to add a role!" );
+    this.isAddRole = true;
+    this.displayAddRoleComponent.emit( this.isAddRole );
   }
 
 }

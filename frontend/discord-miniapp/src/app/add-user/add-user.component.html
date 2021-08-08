@@ -1,0 +1,17 @@
+<div class="add-channel container col-md-3" *ngIf="users">
+    <h3>Add User</h3>
+    <div class="d-flex justify-content-center form">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+                <select class="custom-select" formControlName="userID">
+                    <option value="" disabled>Choose a user</option>
+                    <option *ngFor="let user of users" [ngValue]="user.userID">{{ user.displayName }}</option>
+                </select>
+            </div>
+            <div class="d grid d-md-flex justify-content-center">
+                <button class="btn btn-primary" type="submit" [disabled]="!userForm.valid">Add User</button>
+            </div>
+        </form>
+    </div>
+    
+</div>

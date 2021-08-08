@@ -10,5 +10,9 @@ h2, h3 {
 }
 
 .add-server{
+    margin-top: 5%;
     vertical-align: middle;
+    background-color: rgb(16, 51, 51);
+    border-radius: 5%;
+    padding: 1%;
 }

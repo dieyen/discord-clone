@@ -2,11 +2,14 @@
     <ul class="nav flex-column text-white w-100">
         <h3 class="text-white">Users</h3>
         
-        <li *ngFor="let user of userList">
+        <li *ngFor="let user of userList" (click)="selectUser(user['user_id'])">
             <p class="user-entry"><span class="align-middle"> {{ user['display_name'] }} </span></p>
         </li>
-        <li (click)="addUser()">
+        <li (click)="addUser()" *ngIf="toggleSelectedServer">
             <p class="user-entry"><span class="align-middle add-user">+</span></p>
         </li>
     </ul>
+    <div class="add-role" *ngIf="toggleSelectedServer" (click)="addRole()">
+        <h4>Add Role</h4>
+    </div>
 </div>

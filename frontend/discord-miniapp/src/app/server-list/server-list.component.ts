@@ -9,9 +9,11 @@ import { User } from '../_types/user';
 })
 export class ServerListComponent implements OnInit {
   @Output() displayAddServerComponent = new EventEmitter<boolean>();
-  @Output() serverEmitter = new EventEmitter<number>();
+  @Output() serverEmitter = new EventEmitter<string>();
+  @Output() displayChannelList = new EventEmitter<boolean>();
 
   toggleAddServer = false;
+  toggleChannelList = false;
   
   serverList?: [];
   user?: User;
@@ -23,7 +25,7 @@ export class ServerListComponent implements OnInit {
   ngOnInit(): void {
     this.api.getServers().subscribe(
       (data) => {
-        console.log( data );
+        // console.log( data );
         var servers = data.data;
         this.serverList = servers;
       }
@@ -31,10 +33,13 @@ export class ServerListComponent implements OnInit {
     this.user = this.api.getUser();
   }
 
-  selectServer(serverID: number){
+  selectServer(serverID: string){
     this.api.setSelectedServer( serverID );
+    this.api.setUsers();
     // console.log( "Server ID: ", this.api.getSelectedServerID() );
     this.serverEmitter.emit(this.api.getSelectedServerID());
+    this.toggleChannelList != this.toggleChannelList;
+    this.displayChannelList.emit( this.toggleChannelList );
   }
 
   addServer(){

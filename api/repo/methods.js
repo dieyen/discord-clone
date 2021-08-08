@@ -48,7 +48,7 @@ const commands = {
 
     addUser: function(email, displayName, picture, password){
         const userID = email + ":" + nanoid();
-        console.log( "User ID:", userID );
+        // console.log( "User ID:", userID );
 
         var addUserToDb = db.raw( 'CALL AddUser(?, ?, ?, ?, ?);', [ userID, email, displayName, picture, password ] );
     
@@ -56,8 +56,8 @@ const commands = {
             "users:"+userID, 
             "userID", userID,
             "email", email,
-            "display_name", displayName,
-            "user_picture", picture,
+            "displayName", displayName,
+            "userPicture", picture,
             "password", password);
 
         return Promise.all( [ addUserToDb, addUserToRedis ] )
@@ -65,7 +65,7 @@ const commands = {
             () => {
                 var objectToReturn = {
                     "email": email,
-                    "display_name": displayName,
+                    "displayName": displayName,
                     "picture": picture,
                 }
 
@@ -75,19 +75,22 @@ const commands = {
     },
 
     listUsers: function(){
-        console.log( "Repository: Listing users..." );
-        return ioredis.hkeys( "users:*" );
-        // return db.raw( 'CALL ListUsers();' )
-        // .then(
-        //     (val) => {
-        //         return val[0][0];
-        //     }
-        // );
+        // console.log( "Repository: Listing users..." );
+        return ioredis.keys( "users:*" )
+        .then(
+            (val) => {
+                var promises = [];
+                val.forEach( (value, index, obj) => {
+                    promises.push( ioredis.hgetall(value) );
+                })
+
+                return Promise.all( promises );
+            }
+        );
     },
 
     getUser: function(userID){
         return ioredis.hgetall( "users:" + userID );
-        // return db.raw( 'CALL GetUser(?)', [ userID ] );
     },
 
     addServer: function(serverName, serverPicture, userID, email, displayName, userPicture){
@@ -113,7 +116,7 @@ const commands = {
             description: "First Channel of this server!"
         }
 
-        console.log( server );
+        // console.log( server );
 
         var addServerToDb = db.raw( 'CALL AddServer(?, ?, ?, ?, ?, ?, ?, ?, ?);', [ newServerID, serverName, serverPicture, userID, email, displayName, userPicture, newRoleID, newChannelID ] );
 
@@ -151,6 +154,15 @@ const commands = {
         );
     },
 
+    getUsersNotInServer: function( userID, serverID ){
+        return db.raw( 'CALL GetUsersNotInServer(?, ?);', [ userID, serverID ] )
+        .then(
+            (val) => {
+                return val[0][0];
+            }
+        );
+    },
+
     getChannelsInServer: function(userID, serverID){
         return db.raw( "CALL GetChannelsInServer(?, ?);", [ userID, serverID ] )
         .then(
@@ -170,7 +182,7 @@ const commands = {
             serverID: serverID
         }
 
-        console.log( typeof(role) );
+        // console.log( typeof(role) );
 
         if ( role === '' ){
             role = [];
@@ -228,6 +240,32 @@ const commands = {
                 return val[0][0];
             }
         )
+    },
+
+    addUserInServer: function(serverID, userID, role){
+
+        if ( role === '[]' ){
+            role = '';
+        }
+
+        var getServer = ioredis.hgetall( "servers:" + serverID);
+        var getUser = ioredis.hgetall( "users:" + userID );
+
+        const roleString = JSON.stringify( role );
+
+        return Promise.all( [ getServer, getUser ] )
+        .then(
+            (val) => {
+                const server = val[0];
+                const user = val[1];
+
+                // console.log( "Server:", server );
+                // console.log( "User:", user );
+
+                return db.raw( 'CALL AddUserInServer(?, ?, ?, ?, ?, ?, ?, ?);', [ userID, user.email, user.displayName, user.userPicture, serverID, server.name, server.picture, roleString ] );
+            }
+        )
+        
     }
 }
 

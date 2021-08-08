@@ -18,6 +18,8 @@ import { AddServerComponent } from './add-server/add-server.component';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { ChannelDetailComponent } from './channel-detail/channel-detail.component';
+import { AddRoleComponent } from './add-role/add-role.component';
+import { AddUserComponent } from './add-user/add-user.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { ChannelDetailComponent } from './channel-detail/channel-detail.componen
     AddServerComponent,
     AddChannelComponent,
     UserListComponent,
-    ChannelDetailComponent
+    ChannelDetailComponent,
+    AddRoleComponent,
+    AddUserComponent
   ],
   imports: [
     BrowserModule,

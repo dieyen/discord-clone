@@ -18,7 +18,8 @@ router.post( '/servers/', controller.postServer );                // /server/
 router.get( '/servers/', controller.listServersInUser );         // /servers/
 router.get( '/servers/:serverID', controller.getServerInUser );   // /server/:serverID/
 router.get( '/servers/:serverID/users', controller.getUsersInServer );
-
+router.get( '/servers/:serverID/users/invite', controller.getUsersNotInServer );
+router.post( '/servers/:serverID/users', controller.addUserInServer );
 // /* Routings for Roles */
 router.post( '/servers/:serverID/roles/', controller.postRole );                 // /role/
 router.get( '/servers/:serverID/roles/', controller.listRolesInServer );        // /roles/

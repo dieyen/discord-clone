@@ -14,6 +14,7 @@ export class ChannelListComponent implements OnInit {
   @Output() channelEmitter = new EventEmitter<string>();
 
   toggleAddChannel = false;
+  toggleSelectedServer = false;
 
   constructor(
     private api: ApiService
@@ -26,6 +27,10 @@ export class ChannelListComponent implements OnInit {
   ngOnInit(): void {
   }
   
+  isServerSelected(state: boolean){
+    this.toggleSelectedServer = state;
+  }
+
   retrieveChannels(): void {
     this.api.getChannels().subscribe(
       (data) => {

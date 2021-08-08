@@ -13,17 +13,19 @@ import { retry, catchError } from 'rxjs/operators';
 })
 export class ApiService {
   private loggedUser: User = {
-    id: 0,
+    userID: '',
     email: '',
     displayName: 'Name',
     picture: ''
   };
+  
+  usersList: User[] = [];
 
   private REST_API_SERVER = "http://localhost:3000";
   private headers = {
     'Content-Type': 'application/json'
   }
-  private selectedServer: number = 0;
+  private selectedServer: string = '';
   
   constructor(
     private httpClient: HttpClient,
@@ -45,8 +47,8 @@ export class ApiService {
     return throwError(errorMessage);
   }
 
-  setUser(id: number, email: string, displayName: string, picture: string){
-    this.loggedUser.id = id;
+  setUser(id: string, email: string, displayName: string, picture: string){
+    this.loggedUser.userID = id;
     this.loggedUser.email = email;
     this.loggedUser.displayName = displayName;
     this.loggedUser.picture = picture;
@@ -54,6 +56,11 @@ export class ApiService {
     this.cookieService.set( 'user', JSON.stringify( this.loggedUser ) );
   }
 
+  getUsersList(){
+    // console.log( this.usersList );
+    return this.usersList;
+  }
+  
   getUser(){
     return JSON.parse( this.cookieService.get( 'user' ) );
   }
@@ -63,7 +70,11 @@ export class ApiService {
   }
 
   getUsers(){
-    return this.httpClient.get( `${this.REST_API_SERVER}/users` ).pipe( retry(3), catchError(this.handleError) );
+    return this.httpClient.get<any>( `${this.REST_API_SERVER}/users`, { headers: this.headers } ).pipe( retry(3), catchError(this.handleError) );
+  }
+
+  getUsersNotInServer(){
+    return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers/${this.selectedServer}/users/invite`, { headers: this.headers } ).pipe( retry(3), catchError(this.handleError) );
   }
 
   getServers(){
@@ -82,6 +93,14 @@ export class ApiService {
     return this.selectedServer;
   }
 
+  setUsers(){
+    this.getUsers().subscribe(
+      (val) => {
+        this.usersList = val.data;
+      }
+    );
+  }
+
   registerUser(email: string, displayName: string, picture: string, password: string){
     const body = {
       email, displayName, picture, password
@@ -98,7 +117,7 @@ export class ApiService {
     return this.httpClient.post<any>( `${this.REST_API_SERVER}/login`, body, { headers: this.headers } )
   }
 
-  setSelectedServer( serverID: number ){
+  setSelectedServer( serverID: string ){
     this.selectedServer = serverID;
   }
 
@@ -110,12 +129,28 @@ export class ApiService {
     return this.httpClient.post( `${this.REST_API_SERVER}/servers`, body, { headers: this.headers } )
   }
 
-  addChannel(serverID: number, name: string, description: string){
+  addChannel(serverID: string, name: string, description: string){
     const body = {
       name, description,
       role: []
     }
 
     return this.httpClient.post( `${this.REST_API_SERVER}/servers/${serverID}/channels`, body, { headers: this.headers } );
+  }
+
+  addRole( serverID: string, name: string, isAdmin: boolean ){
+    const body = {
+      name, isAdmin
+    }
+
+    return this.httpClient.post( `${this.REST_API_SERVER}/servers/${serverID}/roles`, body, { headers: this.headers } );
+  }
+
+  addUserToServer( serverID: string, userID: string, role: string ){
+    const body = {
+      userID: userID,
+      role: []
+    }
+    return this.httpClient.post( `${this.REST_API_SERVER}/servers/${serverID}/users`, body, { headers: this.headers } )
   }
 }

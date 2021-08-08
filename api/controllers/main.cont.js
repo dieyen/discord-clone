@@ -41,7 +41,7 @@ const controller = {
                 res.status(200).json({ 
                     data: {
                         email: val.email,
-                        displayName: val.display_name,
+                        displayName: val.displayName,
                         picture: val.picture
                     } 
                 })
@@ -90,10 +90,10 @@ const controller = {
                     // console.log(val);
                     res.status(200).json({
                         data: {
-                            userID: val.user_id,
+                            userID: val.userID,
                             email: val.email,
-                            displayName: val.display_name,
-                            picture: val.user_picture
+                            displayName: val.displayName,
+                            picture: val.userPicture
                         }
                     });
                 }
@@ -157,8 +157,8 @@ const controller = {
                 res.status(200).json({
                     data: {
                         email: val.email,
-                        displayName: val.display_name,
-                        picture: val.user_picture
+                        displayName: val.displayName,
+                        picture: val.userPicture
                     }
                 });
             },
@@ -210,7 +210,7 @@ const controller = {
                     return;
                 }
 
-                db.addServer( pendingServer.name, pendingServer.picture, val.userID, val.email, val.display_name, val.user_picture)
+                db.addServer( pendingServer.name, pendingServer.picture, val.userID, val.email, val.displayName, val.userPicture)
                 .then(
                     (val) => {
                         res.status(200).json({
@@ -342,7 +342,48 @@ const controller = {
                 db.getUsersInServer( req.params.serverID )
                 .then(
                     (val) => {
-                        console.log( val );
+                        // console.log( val );
+                        res.status(200).json( { data: val } );
+                    }
+                )
+            },
+            (reason) => {
+                res.status(404).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .catch( 
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
+                    }
+                })
+        })
+    },
+
+    getUsersNotInServer: function(req, res){
+        new Promise( (resolve, reject) => {
+            if ( loggedInUser ){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
+        })
+        .then( 
+            (val) => {
+                db.getUsersNotInServer( val.userID, req.params.serverID )
+                .then(
+                    (val) => {
+                        // console.log( val );
                         res.status(200).json( { data: val } );
                     }
                 )
@@ -535,6 +576,54 @@ const controller = {
                     }
                 })
         })
+    },
+
+    addUserInServer: function(req, res){
+        new Promise( (resolve, reject) => {
+            if ( loggedInUser ){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
+        })
+        .then(
+            () => {
+                var body = req.body;
+                db.addUserInServer( req.params.serverID, body.userID, body.role)
+                .then(
+                    () => {
+                        res.status(200).json({
+                            data: {
+                                email: body.email,
+                                serverName: body.serverName,
+                                role: body.role
+                            }
+                        })
+                    }
+                )
+            },
+            () => {
+                res.status(403).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .catch( 
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
+                    }
+                })
+            }
+        )
     }
 }
 

@@ -146,3 +146,32 @@ BEGIN
 	SET `users`.`roles` = JSON_ARRAY_APPEND(`users`.`roles`, '$',  `p_role`)
 	WHERE `users`.`user_id` = `p_user_id`;
 END;
+
+CREATE PROCEDURE `AddUserInServer` (
+	IN `p_user_id` VARCHAR(127),
+    IN `p_email` VARCHAR(100),
+    IN `p_display_name` VARCHAR(45),
+    IN `p_user_picture` VARCHAR(255),
+	IN `p_server_id` VARCHAR(127),
+    IN `p_server_name` VARCHAR(100),
+    IN `p_server_picture` VARCHAR(255),
+    IN `p_role` JSON
+)
+BEGIN
+	INSERT INTO `servers` (`server_id`, `server_name`, `server_picture`, `user_id`, `email`, `display_name`, `user_picture`) VALUES
+    ( `p_server_id`, `p_server_name`, `p_server_picture`, `p_user_id`, `p_email`, `p_display_name`, `p_user_picture` );
+    
+    UPDATE `users`
+	SET `users`.`roles` = JSON_ARRAY_APPEND(`users`.`roles`, '$',  `p_role`)
+	WHERE `users`.`user_id` = `p_user_id`;
+END;
+
+CREATE PROCEDURE `GetUsersNotInServer`(
+	IN `p_user_id` VARCHAR(127),
+	IN `p_server_id` VARCHAR(127)
+)
+BEGIN
+	SELECT * FROM `servers`
+    WHERE `servers`.`server_id` != `p_server_id` 
+    AND `servers`.`user_id` != `p_user_id`;
+END;

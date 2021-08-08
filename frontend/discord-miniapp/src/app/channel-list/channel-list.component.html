@@ -5,7 +5,7 @@
         <li *ngFor="let channel of channels">
             <p class="channel-entry"><span>{{ channel['name'] }}</span></p>
         </li>
-        <li (click)="addChannel()">
+        <li *ngIf="toggleSelectedServer" (click)="addChannel()">
             <p class="channel-entry"><span class="align-middle add-channel">+</span></p>
         </li>
     </ul>
