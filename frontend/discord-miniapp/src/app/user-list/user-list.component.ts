@@ -12,6 +12,8 @@ export class UserListComponent implements OnInit {
   @Output() displayAddRoleComponent = new EventEmitter<boolean>();
   @Input() isAddUser: boolean = false;
   @Output() displayAddUserComponent = new EventEmitter<boolean>();
+  @Input() isSelectedUser: boolean = false;
+  @Output() displaySelectedUserComponent = new EventEmitter<string>();
 
   toggleSelectedServer = false;
 
@@ -37,8 +39,9 @@ export class UserListComponent implements OnInit {
     this.toggleSelectedServer = state;
   }
   
-  selectUser(userID: string){
-
+  selectUser(user: any){
+    this.isSelectedUser = true;
+    this.displaySelectedUserComponent.emit( user );
   }
 
   addUser(){

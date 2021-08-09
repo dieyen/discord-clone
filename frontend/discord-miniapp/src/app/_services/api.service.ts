@@ -20,6 +20,7 @@ export class ApiService {
   };
   
   usersList: User[] = [];
+  rolesList: any = [];
 
   private REST_API_SERVER = "http://localhost:3000";
   private headers = {
@@ -89,6 +90,10 @@ export class ApiService {
     return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers/${this.selectedServer}/users`).pipe( retry(3), catchError(this.handleError) );
   }
 
+  getRolesInServer(){
+    return this.httpClient.get<any>( `${this.REST_API_SERVER}/servers/${this.selectedServer}/roles`).pipe( retry(3), catchError(this.handleError) );
+  }
+
   getSelectedServerID(){
     return this.selectedServer;
   }
@@ -99,6 +104,14 @@ export class ApiService {
         this.usersList = val.data;
       }
     );
+  }
+
+  setRoles(){
+    this.getRolesInServer().subscribe(
+      (val) => {
+        this.rolesList = val.data;
+      }
+    )
   }
 
   registerUser(email: string, displayName: string, picture: string, password: string){
@@ -152,5 +165,12 @@ export class ApiService {
       role: []
     }
     return this.httpClient.post( `${this.REST_API_SERVER}/servers/${serverID}/users`, body, { headers: this.headers } )
+  }
+
+  addRoleToUser( userID: string, role: string){
+    const body = {
+      userID, role
+    }
+    return this.httpClient.post( `${this.REST_API_SERVER}/users/assign-role`, body, { headers: this.headers } )
   }
 }

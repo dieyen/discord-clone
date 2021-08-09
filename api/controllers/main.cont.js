@@ -624,6 +624,52 @@ const controller = {
                 })
             }
         )
+    },
+
+    addRoleInUser: function(req, res){
+        new Promise( (resolve, reject) => {
+            if (loggedInUser){
+                resolve( loggedInUser );
+            }
+            else{
+                reject();
+            }
+        })
+        .then(
+            (val) => {
+                var body = req.body;
+                db.addRoleToUser( body.userID, body.role )
+                .then(
+                    () => {
+                        res.status(200).json({
+                            data: {
+                                message: "Added role " + body.role + " to user."
+                            }
+                        });
+                    }
+                )
+            },
+            () => {
+                res.status(403).json({
+                    error: {
+                        code: 403,
+                        message: "You are not logged in. Please login to continue.",
+                        status: "USER_NOT_LOGGED_IN"
+                    }
+                });
+            }
+        )
+        .catch( 
+            (error) => {
+                res.status(404).json({
+                    error: {
+                        code: 404,
+                        message: error.stack,
+                        status: "ERROR_CAUGHT"
+                    }
+                })
+            }
+        )
     }
 }
 

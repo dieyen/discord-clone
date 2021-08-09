@@ -2,7 +2,7 @@
     <ul class="nav flex-column text-white w-100">
         <h3 class="text-white">Users</h3>
         
-        <li *ngFor="let user of userList" (click)="selectUser(user['user_id'])">
+        <li *ngFor="let user of userList" (click)="selectUser(user)">
             <p class="user-entry"><span class="align-middle"> {{ user['display_name'] }} </span></p>
         </li>
         <li (click)="addUser()" *ngIf="toggleSelectedServer">

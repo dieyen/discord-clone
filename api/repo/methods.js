@@ -47,13 +47,13 @@ const commands = {
     },
 
     addUser: function(email, displayName, picture, password){
-        const userID = email + ":" + nanoid();
+        const userID = nanoid();
         // console.log( "User ID:", userID );
 
         var addUserToDb = db.raw( 'CALL AddUser(?, ?, ?, ?, ?);', [ userID, email, displayName, picture, password ] );
     
         var addUserToRedis = ioredis.hset( 
-            "users:"+userID, 
+            "users:email:"+userID, 
             "userID", userID,
             "email", email,
             "displayName", displayName,
@@ -266,6 +266,10 @@ const commands = {
             }
         )
         
+    },
+
+    addRoleToUser: function( userID, role ){
+        return db.raw( 'CALL AddRoleToUser(?, ?)', userID, role );
     }
 }
 

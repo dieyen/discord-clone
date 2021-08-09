@@ -23,6 +23,7 @@ router.post( '/servers/:serverID/users', controller.addUserInServer );
 // /* Routings for Roles */
 router.post( '/servers/:serverID/roles/', controller.postRole );                 // /role/
 router.get( '/servers/:serverID/roles/', controller.listRolesInServer );        // /roles/
+router.post( '/users/assign-role/', controller.addRoleInUser );
 // router.get( '/user/servers/:serverID/role/:roleID', controller.getRoleInServer );    // /roles/:roleID/?serverID=
 
 // /* Routings for Channels */
