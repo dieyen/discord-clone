@@ -20,7 +20,7 @@ import { UserListComponent } from './user-list/user-list.component';
 import { ChannelDetailComponent } from './channel-detail/channel-detail.component';
 import { AddRoleComponent } from './add-role/add-role.component';
 import { AddUserComponent } from './add-user/add-user.component';
-import { AddUserRoleComponent } from './add-user-role/add-user-role.component';
+// import { AddUserRoleComponent } from './add-user-role/add-user-role.component';
 
 @NgModule({
   declarations: [
@@ -37,8 +37,8 @@ import { AddUserRoleComponent } from './add-user-role/add-user-role.component';
     UserListComponent,
     ChannelDetailComponent,
     AddRoleComponent,
-    AddUserComponent,
-    AddUserRoleComponent
+    AddUserComponent
+    // AddUserRoleComponent
   ],
   imports: [
     BrowserModule,

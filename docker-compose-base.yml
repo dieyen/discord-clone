@@ -1,0 +1,42 @@
+version: "3"
+ 
+services:
+    harmonia_db:
+        image: mysql:5.7
+        ports:
+             - "3306:3306"
+        environment:
+             - MYSQL_ROOT_PASSWORD=password
+             - MYSQL_DATABASE=mydb
+    
+    harmonia_redis:
+        image: redis
+        ports:
+            - 6379:6379
+        command: 'redis-server --requirepass "Password123"'
+
+    harmonia_api:
+        image: 443736785131.dkr.ecr.ap-southeast-1.amazonaws.com/harmonia_api
+        build: ./api
+        ports:
+            - 3000:3000
+        environment:
+            - DB_NAME=mydb
+            - DB_HOST=db_server
+            - DB_PORT=3306
+            - DB_USER=root
+            - DB_PASSWORD=password
+        command: "bash start.sh harmonia_db:3306"
+
+    harmonia_angular:
+        image: 443736785131.dkr.ecr.ap-southeast-1.amazonaws.com/harmonia_angular
+        build: ./frontend/
+        ports:
+            - 80:80
+        command: "bash start.sh"
+        deploy:
+            resources:
+              limits:
+                cpus: '1'
+                memory: 2048M
+    

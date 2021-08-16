@@ -1,39 +1,28 @@
 version: "3"
  
 services:
-    db_server:
-        image: mysql:5.7
-        ports:
-             - "3306:3306"
-        environment:
-             - MYSQL_ROOT_PASSWORD=password
-             - MYSQL_DATABASE=mydb
+    harmonia_db:
+        extends:
+            file: docker-compose-base.yml
+            service: harmonia_db
     
-    redis:
-        image: redis
-        ports:
-            - 6379:6379
-        command: redis-server        
+    harmonia_redis:
+        extends:
+            file: docker-compose-base.yml
+            service: harmonia_redis
 
-    mini-app:
-        build: ./api
-        ports:
-            - 3000:3000
-            - 5858:5858
+    harmonia_api:
+        extends:
+            file: docker-compose-base.yml
+            service: harmonia_api
         volumes:
             - ./api:/app
-        environment:
-            - DB_NAME=mydb
-            - DB_HOST=db_server
-            - DB_PORT=3306
-            - DB_USER=root
-            - DB_PASSWORD=password
         depends_on:
-            - db_server
-            - redis
-        command: "bash start.sh db_server:3306"
+            - harmonia_db
+            - harmonia_redis
+        command: "bash start.sh"
 
-    angular:
+    harmonia_angular:
         build: ./frontend/
         ports:
             - 4200:4200
