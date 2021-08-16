@@ -1,7 +1,11 @@
 var db = require('./connect-mysql');
 var nanoid = require('nanoid');
 const Redis = require("ioredis");
-const ioredis = new Redis({host: 'redis'});
+const ioredis = new Redis({
+    host: 'harmonia_redis',
+    port: 6379,
+    password: "Password123"
+});
 
 function updateEntry( userID, field, value ){
     return ioredis.hgetall( userID )
@@ -25,23 +29,14 @@ const commands = {
     },
 
     loginUser: function(email, password){
-        return ioredis.keys("users:" + email + "*")
+        return ioredis.hgetall("users:" + email)
         .then(
             (val) => {
-                // console.log("Retrieving keys:", val);
-                return Promise.resolve( ioredis.hgetall( val ) );
-            }
-        )
-        .then(
-            (val) => {
-                if ( val.email === email && val.password === password ){
-                    // console.log("Valid credentials...");
-                    return Promise.resolve( val );
+                if ( val.password == password ){
+                    return val;
                 }
-                else{
-                    // console.log("Invalid credentials...");
-                    return null;
-                }
+                
+                return null;
             }
         )
     },
@@ -53,7 +48,7 @@ const commands = {
         var addUserToDb = db.raw( 'CALL AddUser(?, ?, ?, ?, ?);', [ userID, email, displayName, picture, password ] );
     
         var addUserToRedis = ioredis.hset( 
-            "users:email:"+userID, 
+            `users:${email}`, 
             "userID", userID,
             "email", email,
             "displayName", displayName,
@@ -76,17 +71,12 @@ const commands = {
 
     listUsers: function(){
         // console.log( "Repository: Listing users..." );
-        return ioredis.keys( "users:*" )
+        return db.raw( 'CALL ListUsers();')
         .then(
             (val) => {
-                var promises = [];
-                val.forEach( (value, index, obj) => {
-                    promises.push( ioredis.hgetall(value) );
-                })
-
-                return Promise.all( promises );
+                return val[0][0];
             }
-        );
+        )
     },
 
     getUser: function(userID){

@@ -22,18 +22,18 @@ services:
             - 3000:3000
         environment:
             - DB_NAME=mydb
-            - DB_HOST=db_server
+            - DB_HOST=harmonia_db
             - DB_PORT=3306
             - DB_USER=root
             - DB_PASSWORD=password
-        command: "bash start.sh harmonia_db:3306"
+        command: "bash start.sh harmonia_db:3306 harmonia_redis:6379"
 
     harmonia_angular:
         image: 443736785131.dkr.ecr.ap-southeast-1.amazonaws.com/harmonia_angular
         build: ./frontend/
         ports:
             - 80:80
-        command: "bash start.sh"
+        command: "bash start-env.sh"
         deploy:
             resources:
               limits:

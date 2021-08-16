@@ -1,34 +1,20 @@
 version: "3"
  
 services:
-    harmonia_db:
-        extends:
-            file: docker-compose-base.yml
-            service: harmonia_db
-    
-    harmonia_redis:
-        extends:
-            file: docker-compose-base.yml
-            service: harmonia_redis
-
     harmonia_api:
-        extends:
-            file: docker-compose-base.yml
-            service: harmonia_api
         volumes:
             - ./api:/app
         depends_on:
             - harmonia_db
             - harmonia_redis
-        command: "bash start.sh"
 
     harmonia_angular:
-        extends:
-            file: docker-compose-base.yml
-            service: harmonia_api
+        ports:
+            - 4200:4200
         volumes:
             - ./frontend/discord-miniapp/src:/app/src
             - ./frontend/discord-miniapp/start.sh:/app/start.sh
             - /app/src/assets
         depends_on:
             - harmonia_api
+        command: "bash start.sh"

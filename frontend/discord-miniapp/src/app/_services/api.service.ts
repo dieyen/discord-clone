@@ -8,6 +8,8 @@ import { Server } from '../_types/server';
 import {  throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
+import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +24,7 @@ export class ApiService {
   usersList: User[] = [];
   rolesList: any = [];
 
-  private REST_API_SERVER = "http://localhost:3000";
+  private REST_API_SERVER = environment.apiUrl;
   private headers = {
     'Content-Type': 'application/json'
   }
