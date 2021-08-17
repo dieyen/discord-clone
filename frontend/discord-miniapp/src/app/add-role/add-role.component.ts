@@ -35,7 +35,6 @@ export class AddRoleComponent implements OnInit {
     this.api.addRole( this.api.getSelectedServerID(), reg.name, reg.isAdmin ).subscribe(
       (data) => {
         window.location.reload();
-        console.log( data );
       }
     )
   }

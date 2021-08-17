@@ -32,27 +32,17 @@ export class AddUserRoleComponent implements OnInit {
 
   setRoles(){
     this.roles = this.api.getRolesInServer();
-    // this.api.getUsers().subscribe(
-    //   (val) => {
-    //     console.log( val );
-    //     this.users = val;
-    //   }
-    // );
-    console.log( "Setting roles:", this.roles );
   }
 
   ngOnInit(): void {
     this.roles = this.api.getRolesInServer();
-    // console.log( "Setting users:", this.users );
   }
 
   onSubmit(){
     var reg = this.userForm.value;
-    // console.log( reg );
     this.api.addRoleToUser( reg.userID, JSON.stringify( reg.role ) ).subscribe(
       (data) => {
         window.location.reload();
-        console.log( data );
       }
     )
   }

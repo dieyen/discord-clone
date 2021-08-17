@@ -37,7 +37,6 @@ export class AddChannelComponent implements OnInit {
     this.api.addChannel( this.api.getSelectedServerID(), reg.name, reg.description ).subscribe(
       (data) => {
         window.location.reload();
-        console.log( data );
       }
     )
   }

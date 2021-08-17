@@ -38,7 +38,6 @@ export class AddServerComponent implements OnInit {
     this.api.addServer( reg.name, reg.picture ).subscribe(
       (data) => {
         window.location.reload();
-        console.log( data );
       }
     )
   }

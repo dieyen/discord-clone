@@ -590,7 +590,7 @@ const controller = {
         .then(
             () => {
                 var body = req.body;
-                db.addUserInServer( req.params.serverID, body.userID, body.role)
+                db.addUserInServer( req.params.serverID, body.email, body.role)
                 .then(
                     () => {
                         res.status(200).json({

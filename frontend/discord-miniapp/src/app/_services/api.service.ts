@@ -170,9 +170,9 @@ export class ApiService {
     return this.httpClient.post( `${this.REST_API_SERVER}/servers/${serverID}/roles`, body, { headers: this.headers } );
   }
 
-  addUserToServer( serverID: string, userID: string, role: string ){
+  addUserToServer( serverID: string, email: string, role: string ){
     const body = {
-      userID: userID,
+      email: email,
       role: []
     }
     return this.httpClient.post( `${this.REST_API_SERVER}/servers/${serverID}/users`, body, { headers: this.headers } )

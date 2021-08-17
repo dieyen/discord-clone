@@ -232,27 +232,24 @@ const commands = {
         )
     },
 
-    addUserInServer: function(serverID, userID, role){
+    addUserInServer: function(serverID, email, role){
 
         if ( role === '[]' ){
             role = '';
         }
 
         var getServer = ioredis.hgetall( "servers:" + serverID);
-        var getUser = ioredis.hgetall( "users:" + userID );
+        var getUser = ioredis.hgetall( "users:" + email );
 
         const roleString = JSON.stringify( role );
 
-        return Promise.all( [ getServer, getUser ] )
+        return Promise.all( [ getServer, getUser ] )    
         .then(
             (val) => {
                 const server = val[0];
                 const user = val[1];
 
-                // console.log( "Server:", server );
-                // console.log( "User:", user );
-
-                return db.raw( 'CALL AddUserInServer(?, ?, ?, ?, ?, ?, ?, ?);', [ userID, user.email, user.displayName, user.userPicture, serverID, server.name, server.picture, roleString ] );
+                return db.raw( 'CALL AddUserInServer(?, ?, ?, ?, ?, ?, ?, ?);', [ user.userID, user.email, user.displayName, user.userPicture, serverID, server.name, server.picture, roleString ] );
             }
         )
         
