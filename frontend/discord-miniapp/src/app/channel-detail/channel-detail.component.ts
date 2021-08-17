@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
+import { ApiService } from '../_services/api.service';
 
 @Component({
   selector: 'app-channel-detail',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChannelDetailComponent implements OnInit {
 
-  constructor() { }
+  messages: any = [];
+  channelInfo: any = {};
+
+  constructor(
+    private api: ApiService
+  ) { }
 
   ngOnInit(): void {
+    this.channelInfo = this.api.getSelectedChannel()
   }
 
 }

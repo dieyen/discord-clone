@@ -117,4 +117,20 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  setChannel(channel: any){
+    this.api.setSelectedChannel( channel );
+    console.log( channel );
+    this.isAddServer = false;
+    this.isAddChannel = false;
+    this.isAddRole = false;
+    this.isAddUser = false;
+
+    if ( !this.isChannelSelected ){
+      this.isChannelSelected = true;
+    }
+    else{
+      this.isChannelSelected = false;
+    }
+  }
+
 }

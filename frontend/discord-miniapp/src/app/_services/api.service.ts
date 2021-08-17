@@ -29,6 +29,7 @@ export class ApiService {
     'Content-Type': 'application/json'
   }
   private selectedServer: string = '';
+  private selectedChannel: any = {};
   
   constructor(
     private httpClient: HttpClient,
@@ -100,6 +101,10 @@ export class ApiService {
     return this.selectedServer;
   }
 
+  getSelectedChannel(){
+    return this.selectedChannel;
+  }
+
   setUsers(){
     this.getUsers().subscribe(
       (val) => {
@@ -134,6 +139,10 @@ export class ApiService {
 
   setSelectedServer( serverID: string ){
     this.selectedServer = serverID;
+  }
+
+  setSelectedChannel( channel: any ){
+    this.selectedChannel = channel;
   }
 
   addServer(name: string, picture: string){

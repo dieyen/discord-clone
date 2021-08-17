@@ -53,4 +53,8 @@ export class ChannelListComponent implements OnInit {
     this.displayAddChannelComponent.emit( this.toggleAddChannel );
   }
 
+  selectChannel( channel: any ){
+    this.channelEmitter.emit( channel );
+  }
+
 }

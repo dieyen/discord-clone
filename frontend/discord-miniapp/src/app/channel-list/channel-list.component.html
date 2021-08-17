@@ -2,7 +2,7 @@
     <ul class="nav flex-wrap flex-column text-white w-100">
         <h3 class="text-white">Channels</h3>
         
-        <li *ngFor="let channel of channels">
+        <li *ngFor="let channel of channels" (click)="selectChannel(channel)">
             <p class="channel-entry"><span>{{ channel['name'] }}</span></p>
         </li>
         <li *ngIf="toggleSelectedServer" (click)="addChannel()">
